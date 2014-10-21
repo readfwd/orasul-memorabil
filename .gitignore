@@ -1,0 +1,12 @@
+node_modules
+*.swp
+*.swo
+.DS_Store
+dist
+npm-debug.log
+.tmp
+coverage
+app/js/lib/templates.js
+app/js/lib/url-replaecements.js
+app/bower_components
+*.log
