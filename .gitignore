@@ -6,6 +6,8 @@ dist
 npm-debug.log
 .tmp
 coverage
+/db
+/run_server.sh
 app/js/lib/templates.js
 app/js/lib/url-replaecements.js
 app/bower_components
