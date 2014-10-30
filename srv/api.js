@@ -27,13 +27,18 @@ db.on('error', function (err) {
 
 var photosCollection = db.get('photos');
 
+var photosCache = null;
 
 api.get('/photos', function(request, response) {
   Util.sendResponse(response, function() {
+    if (photosCache) {
+      return photosCache;
+    }
     return photosCollection.find().then(function (photos) {
       _.each(photos, function (photo) {
         delete photo._id;
       });
+      photosCache = photos;
       return photos;
     });
   });
@@ -125,6 +130,7 @@ if (s3Opts.accessKeyId && s3Opts.secretAccessKey && s3Opts.region && s3Bucket) {
           title: request.body.title || request.files.file.originalname.replace(/\.[^.]*$/, ''),
           description: request.body.description || '',
           album: request.body.album || '',
+          folder: request.body.folder || '',
           tags: (request.body.tags || '').split(/\s*,\s*/),
         };
 
@@ -139,6 +145,7 @@ if (s3Opts.accessKeyId && s3Opts.secretAccessKey && s3Opts.region && s3Bucket) {
           }),
           photosCollection.insert(dbEntry)
         ]).then(function() {
+          photosCache = null;
           return "File successfully uploaded.";
         });
       });
