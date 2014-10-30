@@ -188,7 +188,7 @@ find "$FOLDER" -type f \( -name "*.jpg" -or -name "*.png" -or -name "*.jpeg" -or
     echo $ALBUM
     
     # resize and compress jpgs
-    gm mogrify -strip -resize 1600x1600\> "$(basename "${file}")" 
+    gm mogrify -strip -resize 1600x1600\> "$(basename "${file}")"
     jpegoptim --m=80 -o "$(basename "${file}")"
 
     # send to AWS via api/add_photo

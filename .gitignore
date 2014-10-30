@@ -13,3 +13,4 @@ app/js/lib/templates.js
 app/js/lib/url-replaecements.js
 app/bower_components
 *.log
+_uploaded
