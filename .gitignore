@@ -8,6 +8,7 @@ npm-debug.log
 coverage
 /db
 /run_server.sh
+/make_thumbs/run.sh
 app/js/lib/templates.js
 app/js/lib/url-replaecements.js
 app/bower_components

@@ -6,6 +6,8 @@ var _ = require('lodash');
 var multer = require('multer');
 var s3 = require('s3');
 var monk = require('monk');
+var fs = require('fs');
+var gm = require('gm');
 
 var Util = require('./util');
 
@@ -71,6 +73,21 @@ function doAuth(req, res, fn) {
   });
 }
 
+function uploadToS3(file, name) {
+  var uploader = s3Client.uploadFile({
+    localFile: file,
+    s3Params: {
+      Bucket: s3Bucket,
+      Key: 'img/' + name,
+      ACL: 'public-read',
+    },
+  });
+  return when.promise(function (resolve, reject) {
+    uploader.on('end', resolve);
+    uploader.on('error', reject);
+  });
+}
+
 // The actual API
 if (s3Opts.accessKeyId && s3Opts.secretAccessKey && s3Opts.region && s3Bucket) {
   api.get('/add_photo', function(request, response) {
@@ -98,28 +115,28 @@ if (s3Opts.accessKeyId && s3Opts.secretAccessKey && s3Opts.region && s3Bucket) {
 
         var uri = 'https://' + s3Bucket + '.s3-' + s3Opts.region + '.amazonaws.com/img/' + request.files.file.name;
 
+        var thumbPath = request.files.file.path.replace('.', '_thumb.');
+        var thumbName = thumbPath.replace(/.*\//, '');
+        var thumbUri = 'https://' + s3Bucket + '.s3-' + s3Opts.region + '.amazonaws.com/img/' + thumbName;
+
         var dbEntry = {
           uri: uri,
+          thumbnailUri: thumbUri,
           title: request.body.title || request.files.file.originalname.replace(/\.[^.]*$/, ''),
           description: request.body.description || '',
           album: request.body.album || '',
           tags: (request.body.tags || '').split(/\s*,\s*/),
         };
 
-        var uploader = s3Client.uploadFile({
-          localFile: request.files.file.path,
-          s3Params: {
-            Bucket: s3Bucket,
-            Key: 'img/' + request.files.file.name,
-            ACL: 'public-read',
-          },
-        });
+        var img = gm(request.files.file.path).resize(600, null, '>');
 
         return when.all([
-          when.promise(function (resolve, reject) {
-            uploader.on('end', resolve);
-            uploader.on('error', reject);
-          }), 
+          uploadToS3(request.files.file.path, request.files.file.name),
+          nodefn.call(img.write.bind(img), thumbName).then(function () {
+            return uploadToS3(thumbPath, thumbName);
+          }).then(function() {
+            fs.unlink(thumbPath);
+          }),
           photosCollection.insert(dbEntry)
         ]).then(function() {
           return "File successfully uploaded.";
@@ -129,4 +146,3 @@ if (s3Opts.accessKeyId && s3Opts.secretAccessKey && s3Opts.region && s3Bucket) {
   });
 }
 
-return 
