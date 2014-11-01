@@ -10,5 +10,6 @@ module.exports = Router.extend({
   },
   home: function () {
     this.trigger('newPage', new HomePage({}));
+    $('body').attr('data-page', 'home');
   }
 });
