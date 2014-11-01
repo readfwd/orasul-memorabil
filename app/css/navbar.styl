@@ -1,0 +1,24 @@
+nav
+  font-size: 0.9em
+  li
+    cursor: pointer
+
+  .navbar-nav > li > a
+    color: white
+
+  a.navbar-brand:hover
+    background-color: transparent !important
+
+[data-page='home']
+  .navbar, .dropdown-menu
+    background: rgba(0,0,0,0.50);
+
+  .dropdown-menu > li > a
+    color: white
+
+  .navbar-dimmed
+    background: om-dark-blue;
+
+  @media(max-width: 992px)
+    .navbar, .dropdown-menu
+      background: om-dark-blue

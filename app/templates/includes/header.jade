@@ -1,11 +1,43 @@
-nav.navbar.navbar-fixed-top.navbar-default(role="navigation")
+nav.navbar.navbar-fixed-top(role="navigation")
   .container
     .navbar-header
-      button.navbar-toggle.collapsed(type="button", data-toggle="collapse", data-target="#navbar-collapse-menu")
-        i.fa.fa-bars
-      .navbar-brand
-        span Orașul Memorabil
+      button.navbar-toggle(type="button", data-toggle="collapse", data-target="#navbar-collapse")
+        span.sr-only Toggle navigation
+        span.icon-bar
+        span.icon-bar
+        span.icon-bar
+      a.logo(class="navbar-brand", href="/")
+        img.black(src="/img/sigla-OM-negru.png")
+        img.white(src="/img/sigla-OM-alb.png")
+
+    //- .navbar-header
+    //-   button.navbar-toggle.collapsed(type="button", data-toggle="collapse", data-target="#navbar-collapse-menu")
+    //-     i.fa.fa-bars
+    //-   .navbar-brand
+    //-     span Orașul Memorabil - Brașov
+
     .collapse.navbar-collapse.navbar-right(id="navbar-collapse-menu")
       ul.nav.navbar-nav
-        li
-          a(href="/") Home
+        li: a(href="/") Acasă
+
+        li.dropdown
+          a.dropdown-toggle(data-toggle="dropdown") Colecția OM <span class="caret"></span>
+          ul.dropdown-menu(role="menu")
+            li: a(href="/photos/recente/") Cele mai recente
+            li: a(href="/photos/albume/") Albume
+            li: a(href="/photos/categorii/") Categorii
+            li: a(href="/photos/arhiva-orasului/") Din arhiva orașului
+            li: a(href="/") Contribuie și tu
+            //- li: a(href="/") Panorame
+
+        li.dropdown
+          a.dropdown-toggle(data-toggle="dropdown") Despre proiect <span class="caret"></span>
+          ul.dropdown-menu(role="menu")
+            li: a(href="/despre-proiect/") Despre proiect
+            li: a(href="/orasulmemorabil-2009/") OM 2009
+            li: a(href="/orasulmemorabil-2010/") OM 2010
+            li: a(href="/orasulmemorabil-2011/") OM 2011
+            li: a(href="/orasulmemorabil-2012/") OM 2012
+            li: a(href="/orasulmemorabil-2013/") OM 2013
+            li: a(href="/contact/") Contact
+        li: a(href="/") Contribuie și tu
