@@ -5,7 +5,7 @@
     "skip": true,
     "priority": "1.0"
   },
-  "/despre-proiect/": {
+  "despre-proiect/": {
     "prefix": "despreProiect",
     "changeFreq": "daily",
     "priority": "1.0"
