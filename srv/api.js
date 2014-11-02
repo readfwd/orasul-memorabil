@@ -39,14 +39,22 @@ api.get('/recent_photos', function(request, response) {
   Util.sendResponse(response, function() {
     var after = request.query.after;
     var count = parseInt(request.query.count);
+    var decade = parseInt(request.query.decade);
     if (isNaN(count)) { count = 10; }
     if (count > 50) { count = 50; }
     var query = {};
     if (after) {
       query = { _id: { '$lt': photosCollection.id(after) } };
     }
+    if (!isNaN(decade)) {
+      options = ['a' + decade];
+      for (var i = 0; i < 10; i++) {
+        options.push((decade + i).toString());
+      }
+      query.tags = { '$in': options };
+    }
     return photosCollection.find(query, {
-      sort: { "_id": -1 },
+      sort: { '_id': -1 },
       limit: count
     });
   });

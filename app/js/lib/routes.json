@@ -14,5 +14,10 @@
     "prefix": "photosRecent",
     "changeFreq": "daily",
     "priority": "1.0"
+  },
+  "photos/90/": {
+    "prefix": "photos90",
+    "changeFreq": "daily",
+    "priority": "1.0"
   }
 }

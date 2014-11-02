@@ -28,5 +28,14 @@ module.exports = Router.extend({
 
   photosRecent: function () {
     this.switchPage(new PhotosPage({}));
+  },
+
+  photos90: function () {
+    this.switchPage(new PhotosPage({
+      slug: 'photos-90',
+      filter: {
+        decade: 1990,
+      },
+    }));
   }
 });
