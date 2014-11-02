@@ -22,9 +22,19 @@ module.exports = View.extend({
     $(window).scroll(this.handleScrolling.bind(this));
 
     this.pageSwitcher = new ViewSwitcher(this.$('[role="page-container"]')[0], {
-      show: function (newView) {
+      show: function (newView, oldView) {
+        if (oldView) {
+          oldView.stopListening();
+        }
+
         document.title = newView.pageTitle || 'Balul Bobocilor';
         window.scrollTo(0, 0);
+
+        var slug = null;
+        if (typeof(newView.slug) === 'string') {
+          slug = newView.slug;
+        }
+        $('body').attr('data-page', slug);
 
         window.app.currentPage = newView;
       }

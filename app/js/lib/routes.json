@@ -9,5 +9,10 @@
     "prefix": "despreProiect",
     "changeFreq": "daily",
     "priority": "1.0"
+  },
+  "photos/recente/": {
+    "prefix": "photosRecent",
+    "changeFreq": "daily",
+    "priority": "1.0"
   }
 }

@@ -7,6 +7,7 @@ var templates = require('../lib/templates');
 
 module.exports = View.extend({
   pageTitle: 'Orasul Memorabil | Despre proiect',
+  slug: 'despre-proiect',
   template: templates.pages.despreProiect,
 
   render: function () {

@@ -8,6 +8,7 @@ var heroes = require('../lib/home-heroes.json');
 
 module.exports = View.extend({
   pageTitle: 'Orasul Memorabil | Home',
+  slug: 'home',
   template: templates.pages.home,
   homePage: true,
 

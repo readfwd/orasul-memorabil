@@ -7,21 +7,26 @@ var routes = require('./lib/routes.json');
 
 var HomePage = require('./pages/home');
 var DespreProiectPage = require('./pages/despre-proiect');
+var PhotosPage = require('./pages/photos-recent');
 
 module.exports = Router.extend({
   routes: _.mapValues(routes, function(route) {
     return route.prefix;
   }),
 
-  home: function () {
-    this.trigger('newPage', new HomePage({}));
-    $('body').attr('data-page', 'home');
-    console.log('home');
-
+  switchPage: function (pageView) {
+    this.trigger('newPage', pageView);
   },
+
+  home: function () {
+    this.switchPage(new HomePage({}));
+  },
+
   despreProiect: function () {
-    this.trigger('newPage', new DespreProiectPage({}));
-    $('body').attr('data-page', 'despre-proiect');
-    console.log('despre-proiect');
+    this.switchPage(new DespreProiectPage({}));
+  },
+
+  photosRecent: function () {
+    this.switchPage(new PhotosPage({}));
   }
 });

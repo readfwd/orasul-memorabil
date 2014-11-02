@@ -27,19 +27,27 @@ db.on('error', function (err) {
 
 var photosCollection = db.get('photos');
 
-var photosCache = null;
+//CORS
+api.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
-api.get('/photos', function(request, response) {
+//Get the photos
+api.get('/recent_photos', function(request, response) {
   Util.sendResponse(response, function() {
-    if (photosCache) {
-      return photosCache;
+    var after = request.query.after;
+    var count = parseInt(request.query.count);
+    if (isNaN(count)) { count = 10; }
+    if (count > 50) { count = 50; }
+    var query = {};
+    if (after) {
+      query = { _id: { '$lt': photosCollection.id(after) } };
     }
-    return photosCollection.find().then(function (photos) {
-      _.each(photos, function (photo) {
-        delete photo._id;
-      });
-      photosCache = photos;
-      return photos;
+    return photosCollection.find(query, {
+      sort: { "_id": -1 },
+      limit: count
     });
   });
 });
@@ -145,7 +153,6 @@ if (s3Opts.accessKeyId && s3Opts.secretAccessKey && s3Opts.region && s3Bucket) {
           }),
           photosCollection.insert(dbEntry)
         ]).then(function() {
-          photosCache = null;
           return "File successfully uploaded.";
         });
       });

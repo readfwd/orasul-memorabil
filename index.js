@@ -9,13 +9,6 @@ var _ = require('lodash');
 // For uploading photos to S3 / MongoDB
 var api = require('./srv/api');
 
-function normalizeRoute(route) {
-  return route.replace(/^\//, '').replace(/\/$/, '');
-}
-_.each(routes, function (route, path) {
-    validRoutes.push(normalizeRoute(path));
-});
-
 // Create the express app
 var app = express();
 
@@ -44,6 +37,14 @@ app.get('/sitemap.xml', function(request, response) {
 app.use('/api', api);
 
 // Index.html
+
+//function normalizeRoute(route) {
+  //return route.replace(/^\//, '').replace(/\/$/, '');
+//}
+//_.each(routes, function (route, path) {
+    //validRoutes.push(normalizeRoute(path));
+//});
+
 app.get('*', function(request, response) {
   // var path = request.url.replace(/\?.*$/, '').replace(/\/$/, '').replace(/^\//, '');
   // var found = false;
