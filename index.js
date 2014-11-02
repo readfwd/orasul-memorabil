@@ -3,11 +3,22 @@
 var express = require('express');
 var compression = require('compression');
 var seo = require('mean-seo');
+var routes = require('./app/js/lib/routes');
+var _ = require('lodash');
 
+// For uploading photos to S3 / MongoDB
 var api = require('./srv/api');
+
+function normalizeRoute(route) {
+  return route.replace(/^\//, '').replace(/\/$/, '');
+}
+_.each(routes, function (route, path) {
+    validRoutes.push(normalizeRoute(path));
+});
 
 // Create the express app
 var app = express();
+
 
 // Enable gzip compression.
 app.use(compression());

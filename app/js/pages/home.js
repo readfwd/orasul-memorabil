@@ -3,7 +3,7 @@
 var Backbone = require('../shims/backbone');
 var View = Backbone.View;
 var templates = require('../lib/templates');
-var heroes = require('../lib/home-heroes.json')
+var heroes = require('../lib/home-heroes.json');
 
 
 module.exports = View.extend({

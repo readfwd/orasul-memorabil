@@ -1,0 +1,13 @@
+{
+  "": {
+    "prefix": "home",
+    "changeFreq": "daily",
+    "skip": true,
+    "priority": "1.0"
+  },
+  "/despre-proiect/": {
+    "prefix": "despreProiect",
+    "changeFreq": "daily",
+    "priority": "1.0"
+  }
+}

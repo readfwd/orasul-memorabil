@@ -17,7 +17,7 @@ module.exports = {
     // Wait for the DOM to be rendered
     $(document).ready(function () {
       loadcss('/css/main.css');
-      loadcss('http://fonts.googleapis.com/css?family=Unica+One|Roboto:400,300,100|Roboto+Slab:400,300');
+      // loadcss('http://fonts.googleapis.com/css?family=Unica+One|Roboto:400,300,100|Roboto+Slab:400,300');
 
       //Mainview initialization
       var mainView = self.view = new MainView({
