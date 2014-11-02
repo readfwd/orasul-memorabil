@@ -14,3 +14,4 @@ app/js/lib/url-replaecements.js
 app/bower_components
 *.log
 _uploaded
+app/js/lib/db.json
