@@ -1,24 +1,75 @@
-nav
+nav.navbar
+  background: om-dark
+  position: fixed
+  top: 0
+  z-index: 100
+  width: 100%
   font-size: 0.9em
-  li
-    cursor: pointer
 
-  .navbar-nav > li > a
+  .navbar-header
+    .logo
+      position: absolute
+      top: 40px
+      left: 50px
+      img
+        height: 7em
+
+    .om-logo
+      img
+        position: absolute
+        height: 2em !important
+        top: 50%
+        transform: translateY(-50%)
+    @media (max-width: 991px)
+      .om-logo
+        img
+        top: 10%
+        transform: translateY(-5%)
+
+  nav.navbar #navbar-collapse-menu .dropdown-menu>li, 
+  nav.navbar #navbar-collapse-menu .dropdown-menu>li>a, 
+  nav.navbar #navbar-collapse-menu ul.navbar-nav>li, 
+  nav.navbar #navbar-collapse-menu ul.navbar-nav>li>a
     color: white
+    cursor: pointer
+    background: om-dark
+    &:hover
+      background: om-butter
+      color: om-dark
 
-  a.navbar-brand:hover
-    background-color: transparent !important
+  // a.navbar-brand:hover
+  //   background-color: transparent !important
 
 [data-page='home']
-  .navbar, .dropdown-menu
-    background: rgba(0,0,0,0.50);
+  nav.navbar
+    background: transparent
 
-  .dropdown-menu > li > a
+  nav.navbar #navbar-collapse-menu .dropdown-menu>li, 
+  nav.navbar #navbar-collapse-menu .dropdown-menu>li>a, 
+  nav.navbar #navbar-collapse-menu ul.navbar-nav>li, 
+  nav.navbar #navbar-collapse-menu ul.navbar-nav>li>a
     color: white
+    cursor: pointer
+    background: rgba(0,0,0,0.30);
+    a
+      border-bottom: 3px solid transparent
+      &:hover
+        // background: rgba(0,0,0,0.50);
+        color: white
+        border-bottom: 3px solid white
 
-  .navbar-dimmed
-    background: om-dark-blue;
+
+  // .dropdown-menu > li > a
+  //   color: white
+
+  // .navbar-dimmed
+  //   background: om-dark;
 
   @media(max-width: 992px)
-    .navbar, .dropdown-menu
-      background: om-dark-blue
+    // .navbar, .dropdown-menu
+    //   background: om-dark
+  .logo
+    .white
+      display: block
+    .black
+      display: none
