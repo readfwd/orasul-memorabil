@@ -95,5 +95,9 @@ module.exports = View.extend({
     if (!self.ongoingRequest && !self.reachedEnd) {
       self.loadPhotos(15, self.lastId);
     }
-  }
+  },
+
+  customDocumentClasses: function () {
+    return ['recent-photos'];
+  },
 });

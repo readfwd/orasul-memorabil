@@ -7,7 +7,7 @@ nav.navbar
   font-size: 0.9em
 
   .navbar-header
-    .logo
+    .logo-big
       position: absolute
       top: 40px
       left: 50px
@@ -26,9 +26,9 @@ nav.navbar
         top: 10%
         transform: translateY(-5%)
 
-  nav.navbar #navbar-collapse-menu .dropdown-menu>li, 
-  nav.navbar #navbar-collapse-menu .dropdown-menu>li>a, 
-  nav.navbar #navbar-collapse-menu ul.navbar-nav>li, 
+  nav.navbar #navbar-collapse-menu .dropdown-menu>li,
+  nav.navbar #navbar-collapse-menu .dropdown-menu>li>a,
+  nav.navbar #navbar-collapse-menu ul.navbar-nav>li,
   nav.navbar #navbar-collapse-menu ul.navbar-nav>li>a
     color: white
     cursor: pointer
@@ -40,13 +40,13 @@ nav.navbar
   // a.navbar-brand:hover
   //   background-color: transparent !important
 
-[data-page='home']
+.home-page
   nav.navbar
     background: transparent
 
-  nav.navbar #navbar-collapse-menu .dropdown-menu>li, 
-  nav.navbar #navbar-collapse-menu .dropdown-menu>li>a, 
-  nav.navbar #navbar-collapse-menu ul.navbar-nav>li, 
+  nav.navbar #navbar-collapse-menu .dropdown-menu>li,
+  nav.navbar #navbar-collapse-menu .dropdown-menu>li>a,
+  nav.navbar #navbar-collapse-menu ul.navbar-nav>li,
   nav.navbar #navbar-collapse-menu ul.navbar-nav>li>a
     color: white
     cursor: pointer
@@ -73,3 +73,16 @@ nav.navbar
       display: block
     .black
       display: none
+.logo-small
+  position: relative
+  padding: 15px
+  top: 0
+  left: 0
+  height: 3em
+  img
+    position: absolute
+    top: 50%
+    height: 80%
+    transform: translateY(-50%)
+  span
+    margin-left: 3.4em

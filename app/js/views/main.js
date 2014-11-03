@@ -3,6 +3,7 @@
 var Backbone = require('../shims/backbone');
 var View = Backbone.View;
 
+var _ = Backbone._;
 var $ = require('../shims/jquery');
 
 var ViewSwitcher = require('ampersand-view-switcher');
@@ -21,22 +22,46 @@ module.exports = View.extend({
 
     $(window).scroll(this.handleScrolling.bind(this));
 
+    function getClasses(view) {
+      if (typeof(view) !== 'object' || typeof(view.customDocumentClasses) !== 'function') {
+        return [];
+      }
+      return view.customDocumentClasses();
+    }
+
     this.pageSwitcher = new ViewSwitcher(this.$('[role="page-container"]')[0], {
       show: function (newView, oldView) {
         if (oldView) {
           oldView.stopListening();
         }
 
-        document.title = newView.pageTitle || 'Balul Bobocilor';
+        document.title = newView.pageTitle || 'Orașul Memorabil';
         window.scrollTo(0, 0);
 
-        var slug = null;
-        if (typeof(newView.slug) === 'string') {
-          slug = newView.slug;
-        }
-        $('body').attr('data-page', slug);
+
+        var html = $('html');
+        _.each(self.documentClasses, function (c) {
+          html.removeClass(c);
+        });
+        self.documentClasses = getClasses(newView);
+        _.each(self.documentClasses, function (c) {
+          html.addClass(c);
+          if (c === 'home-page') {
+            $('.logo-big').removeClass('hidden');
+            $('.logo-small').addClass('hidden');
+          } else {
+            $('.logo-big').addClass('hidden');
+            $('.logo-small').removeClass('hidden');
+          }
+        });
+
 
         window.app.currentPage = newView;
+        // var slug = null;
+        // if (typeof(newView.slug) === 'string') {
+        //   slug = newView.slug;
+        // }
+        // $('body').attr('data-page', slug);
       }
     });
 

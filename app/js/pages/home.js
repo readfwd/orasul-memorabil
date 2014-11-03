@@ -21,6 +21,17 @@ module.exports = View.extend({
 
     self.$('body').attr('data-page', 'home').css("padding-top", 0);
 
+    this.renderLogo();
     return self;
+  },
+
+  customDocumentClasses: function () {
+    return ['home-page'];
+  },
+
+  renderLogo: function () {
+    console.log('caca')
+    $('.logo-big').removeClass('hidden');
+    $('.logo-small').addClass('hidden');
   }
 });

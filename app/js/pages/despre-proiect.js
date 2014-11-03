@@ -14,5 +14,9 @@ module.exports = View.extend({
     var self = this;
     self.$el.html(self.template());
     return self;
-  }
+  },
+
+  customDocumentClasses: function () {
+    return ['about-page'];
+  },
 });
