@@ -15,7 +15,12 @@
     "changeFreq": "daily",
     "priority": "1.0"
   },
-  "photos/:year/": {
+  "photos/timeline/": {
+    "prefix": "photosTimeline",
+    "changeFreq": "daily",
+    "priority": "1.0"
+  },
+  "photos/timeline/:year/": {
     "prefix": "photosYear",
     "changeFreq": "daily",
     "priority": "1.0"

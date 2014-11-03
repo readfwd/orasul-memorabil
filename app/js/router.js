@@ -8,6 +8,8 @@ var routes = require('./lib/routes.json');
 var HomePage = require('./pages/home');
 var DespreProiectPage = require('./pages/despre-proiect');
 var PhotosPage = require('./pages/photos-recent');
+var PhotosFiltered = require('./pages/photos');
+var PhotosTimeline = require('./pages/timeline');
 
 module.exports = Router.extend({
   routes: _.mapValues(routes, function(route) {
@@ -31,11 +33,15 @@ module.exports = Router.extend({
   },
 
   photosYear: function (year) {
-    this.switchPage(new PhotosPage({
+    this.switchPage(new PhotosFiltered({
       slug: 'photos-year',
       filter: {
         decade: year,
       },
     }));
+  },
+
+  photosTimeline: function () {
+    this.switchPage(new PhotosTimeline({}));
   }
 });
