@@ -39,13 +39,13 @@ module.exports = View.extend({
         window.scrollTo(0, 0);
 
 
-        var html = $('html');
+        var body = $('body');
         _.each(self.documentClasses, function (c) {
-          html.removeClass(c);
+          body.removeClass(c);
         });
         self.documentClasses = getClasses(newView);
         _.each(self.documentClasses, function (c) {
-          html.addClass(c);
+          body.addClass(c);
           if (c === 'home-page') {
             $('.logo-big').removeClass('hidden');
             $('.logo-small').addClass('hidden');
