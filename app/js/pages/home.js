@@ -30,7 +30,6 @@ module.exports = View.extend({
   },
 
   renderLogo: function () {
-    console.log('caca')
     $('.logo-big').removeClass('hidden');
     $('.logo-small').addClass('hidden');
   }

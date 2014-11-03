@@ -30,11 +30,11 @@ module.exports = Router.extend({
     this.switchPage(new PhotosPage({}));
   },
 
-  photos90: function () {
+  photosYear: function (year) {
     this.switchPage(new PhotosPage({
-      slug: 'photos-90',
+      slug: 'photos-year',
       filter: {
-        decade: 1990,
+        decade: year,
       },
     }));
   }

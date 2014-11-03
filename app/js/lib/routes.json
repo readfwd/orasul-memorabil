@@ -15,8 +15,8 @@
     "changeFreq": "daily",
     "priority": "1.0"
   },
-  "photos/90/": {
-    "prefix": "photos90",
+  "photos/:year/": {
+    "prefix": "photosYear",
     "changeFreq": "daily",
     "priority": "1.0"
   }
