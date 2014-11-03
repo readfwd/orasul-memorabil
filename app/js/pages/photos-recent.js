@@ -55,8 +55,7 @@ module.exports = View.extend({
         self.reachedEnd = true;
       }
       for (var i = 0, n = data.length; i < n; i++) {
-        if (data[i].tags.indexOf('spate') === -1)
-          self.photoContainer.append(templates.photoPreview(data[i]));
+        self.photoContainer.append(templates.photoPreview(data[i]));
       }
     });
 

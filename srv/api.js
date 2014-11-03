@@ -57,6 +57,10 @@ api.get('/recent_photos', function(request, response) {
     }
     if (album) { query.album = album; }
     if (folder) { query.folder = folder; }
+
+    // remove all records with tags 'E0' or 'spate'
+    query.tags = { $nin: ['E0','spate'] };
+
     return photosCollection.find(query, {
       sort: { '_id': -1 },
       limit: count
