@@ -45,6 +45,10 @@ api.get('/recent_photos', function(request, response) {
     if (isNaN(count)) { count = 10; }
     if (count > 50) { count = 50; }
     var query = {};
+
+    // remove all records with tags 'E0' or 'spate'
+    query.tags = { $nin: ['E0','spate'] };
+
     if (after) {
       query = { _id: { '$lt': photosCollection.id(after) } };
     }
@@ -53,13 +57,12 @@ api.get('/recent_photos', function(request, response) {
       for (var i = 0; i < 10; i++) {
         options.push((decade + i).toString());
       }
-      query.tags = { '$in': options };
+      // also remove "E0" and "spate"from tags when selecting tags! :)
+      query.tags = { '$in': options, '$nin': ['E0','spate'] };
     }
     if (album) { query.album = album; }
     if (folder) { query.folder = folder; }
 
-    // remove all records with tags 'E0' or 'spate'
-    query.tags = { $nin: ['E0','spate'] };
 
     return photosCollection.find(query, {
       sort: { '_id': -1 },
