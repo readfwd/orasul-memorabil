@@ -1,3 +1,9 @@
+[role="navigation"]
+  .container
+    margin-right: 0
+    padding-right: 0
+
+
 nav.navbar
   background: om-dark
   position: fixed
@@ -54,10 +60,20 @@ nav.navbar
     a
       border-bottom: 3px solid transparent
       &:hover
-        // background: rgba(0,0,0,0.50);
+        background: inherit
         color: white
         border-bottom: 3px solid white
 
+    .dropdown-menu
+      background: rgba(0,0,0,0.50);
+      li, li>a
+        background: none
+      li:hover
+        border: none
+      a
+        border-bottom: 3px solid transparent
+      a:hover
+        border-bottom: 3px solid white
 
   // .dropdown-menu > li > a
   //   color: white
