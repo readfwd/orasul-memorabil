@@ -20,6 +20,11 @@
     "changeFreq": "daily",
     "priority": "1.0"
   },
+  "photos/albume(/)": {
+    "prefix": "albume",
+    "changeFreq": "daily",
+    "priority": "1.0"
+  },
   "photos/timeline/:year(/)": {
     "prefix": "photosYear",
     "changeFreq": "daily",

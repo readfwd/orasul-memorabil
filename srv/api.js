@@ -70,6 +70,19 @@ api.get('/recent_photos', function(request, response) {
   });
 });
 
+api.get('/albums', function(request, response) {
+  Util.sendResponse(response, function() {
+    return photosCollection.distinct('album');
+  });
+});
+
+api.get('/folders', function(request, response) {
+  Util.sendResponse(response, function() {
+    return photosCollection.distinct('folder');
+  });
+});
+
+
 // AWS Credentials
 var s3Opts = {
   accessKeyId: process.env.AWS_ACCESS_KEY,

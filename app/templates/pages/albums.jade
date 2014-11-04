@@ -1,0 +1,7 @@
+.container
+  h2 Albume
+  .well
+    ol.breadcrumb
+      each album in albums
+        li: a(href="/photos/albume/" + encodeURIComponent("#{album}")) #{album}
+  

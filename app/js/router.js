@@ -9,6 +9,7 @@ var HomePage = require('./pages/home');
 var DespreProiectPage = require('./pages/despre-proiect');
 var PhotosPage = require('./pages/photos-recent');
 var PhotosTimeline = require('./pages/timeline');
+var AlbumsPage = require('./pages/albums');
 
 module.exports = Router.extend({
   routes: _.mapValues(routes, function(route) {
@@ -43,7 +44,7 @@ module.exports = Router.extend({
 
   photosAlbum: function (album) {
     this.switchPage(new PhotosPage({
-      slug: 'photos-year',
+      slug: 'photos-album',
       pageTitle: 'Orasul Memorabil | Albumul ' + album,
       filter: {
         album: album,
@@ -53,7 +54,7 @@ module.exports = Router.extend({
 
   photosFolder: function (folder) {
     this.switchPage(new PhotosPage({
-      slug: 'photos-year',
+      slug: 'photos-folder',
       pageTitle: 'Orasul Memorabil | Colecția ' + folder,
       filter: {
         folder: folder,
@@ -63,5 +64,9 @@ module.exports = Router.extend({
 
   photosTimeline: function () {
     this.switchPage(new PhotosTimeline({}));
+  },
+
+  albume: function () {
+    this.switchPage(new AlbumsPage({}))
   }
 });
