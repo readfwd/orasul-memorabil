@@ -56,16 +56,25 @@ body
     top: 10%
     transform: translateY(-5%)
 #photo-container
-  display: flex
-  flex-flow: row wrap
-  justify-content: space-between
-  align-items: stretch
-  align-content: flex-start
   .photo-preview
-    max-width: 250px
-    background: white
-    padding: 0.2em
-    margin-bottom: 1em
+    display: block
+    float: left
+    width: 300px
+    margin: 0 20px 20px 0
+    transition: left .4s ease-in-out, top .4s ease-in-out .4s;
     img
       width: 100%
       height: auto
+//   display: flex
+//   flex-flow: row wrap
+//   justify-content: space-between
+//   align-items: stretch
+//   align-content: flex-start
+//   .photo-preview
+//     max-width: 250px
+//     background: white
+//     padding: 0.2em
+//     margin-bottom: 1em
+//     img
+//       width: 100%
+//       height: auto

@@ -21,8 +21,8 @@ module.exports = View.extend({
   loadPhotos: function (count, after) {
     var self = this;
 
-    // var apiUri =  'http://localhost:8080/api';
-    var apiUri = '/api';
+    var apiUri =  'http://localhost:8080/api';
+    // var apiUri = '/api';
     var uri = apiUri + '/recent_photos?count=' + count;
     if (after !== undefined) {
       uri = uri + '&after=' + after;
@@ -57,6 +57,7 @@ module.exports = View.extend({
       for (var i = 0, n = data.length; i < n; i++) {
         self.photoContainer.append(templates.photoPreview(data[i]));
       }
+      self.handleMasonry();
     });
 
     xhr.always(function () {
@@ -107,4 +108,13 @@ module.exports = View.extend({
   customDocumentClasses: function () {
     return this.documentClasses;
   },
+
+  handleMasonry: function () {
+    var container = self.$('#photo-container')[0];
+    var msnry = new Masonry (container, {
+      columnWidth: 20,
+      gutter: 5,
+      itemSelector: '.photo-preview'
+    })
+  }
 });
