@@ -22,6 +22,9 @@ var express = require('express');
 var path = require('path');
 var mainBowerFiles = require('main-bower-files');
 var fs = require('fs');
+var xml = require('xml-writer');
+var mkdirp = require('mkdirp');
+var when = require('when');
 
 var opts = {
   autoprefixer: [
@@ -266,11 +269,38 @@ gulp.task('critical', ['build:dist:base'], function (done) {
   });
 });
 
-gulp.task('build:dist', ['critical'], function () {
+gulp.task('build:dist', ['sitemap', 'critical'], function () {
   return gulp.src(paths.dist + '/index.html')
     .pipe($.replace(
       '<link rel=stylesheet href=' + cssPath + '>',
       '<style>' + CRIT + '</style>'
     ))
     .pipe(gulp.dest(paths.dist));
+});
+
+gulp.task('sitemap', function () {
+  var routes = require('../' + paths.app + '/js/lib/routes.json');
+
+  var sitemap = new xml();
+  var baseLink = "http://macoveipresedinte.ro/";
+
+  sitemap.startDocument();
+  sitemap.startElement('urlset').writeAttribute('xmlns', "http://www.sitemaps.org/schemas/sitemap/0.9")
+    .writeAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance")
+    .writeAttribute('xsi:schemaLocation', "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd");
+  _.each(routes, function (route, path) {
+    if (route.skip) { return; }
+
+    sitemap.startElement('url')
+      .startElement('loc').text(baseLink + path).endElement()
+      .startElement('priority').text(route.priority).endElement()
+      .startElement('changefreq').text(route.changeFreq).endElement()
+      .endElement();
+
+  });
+  sitemap.endElement();
+  sitemap.endDocument();
+  return nodefn.call(mkdirp, paths.dist).then(function () {
+    return nodefn.call(fs.writeFile, paths.dist + '/sitemap.xml', sitemap.toString());
+  });
 });

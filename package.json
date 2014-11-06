@@ -69,6 +69,7 @@
     "lodash": "^2.4.1",
     "main-bower-files": "^2.0.0",
     "mean-seo": "git://github.com/readfwd/mean-seo.git#f641eeea9e",
+    "mkdirp": "^0.5.0",
     "monk": "^0.9.0",
     "multer": "^0.1.6",
     "ngrok": "^0.1.97",
@@ -79,7 +80,8 @@
     "should": "^4.0.4",
     "templatizer": "^0.3.6",
     "vinyl-source-stream": "^0.1.1",
-    "when": "^3.5.1",
-    "wiredep": "^1.8.2"
+    "when": "^3.5.2",
+    "wiredep": "^1.8.2",
+    "xml-writer": "^1.5.0"
   }
 }
