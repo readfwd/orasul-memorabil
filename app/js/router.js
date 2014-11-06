@@ -8,7 +8,6 @@ var routes = require('./lib/routes.json');
 var HomePage = require('./pages/home');
 var DespreProiectPage = require('./pages/despre-proiect');
 var PhotosPage = require('./pages/photos-recent');
-var PhotosFiltered = require('./pages/photos');
 var PhotosTimeline = require('./pages/timeline');
 
 module.exports = Router.extend({
@@ -33,10 +32,31 @@ module.exports = Router.extend({
   },
 
   photosYear: function (year) {
-    this.switchPage(new PhotosFiltered({
+    this.switchPage(new PhotosPage({
       slug: 'photos-year',
+      pageTitle: 'Orasul Memorabil | Poze Anii \'' + year.toString().substr(2),
       filter: {
         decade: year,
+      },
+    }));
+  },
+
+  photosAlbum: function (album) {
+    this.switchPage(new PhotosPage({
+      slug: 'photos-year',
+      pageTitle: 'Orasul Memorabil | Albumul ' + album,
+      filter: {
+        album: album,
+      },
+    }));
+  },
+
+  photosFolder: function (folder) {
+    this.switchPage(new PhotosPage({
+      slug: 'photos-year',
+      pageTitle: 'Orasul Memorabil | Colecția ' + folder,
+      filter: {
+        folder: folder,
       },
     }));
   },

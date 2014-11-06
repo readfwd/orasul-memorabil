@@ -5,23 +5,33 @@
     "skip": true,
     "priority": "1.0"
   },
-  "despre-proiect/": {
+  "despre-proiect(/)": {
     "prefix": "despreProiect",
     "changeFreq": "daily",
     "priority": "1.0"
   },
-  "photos/recente/": {
+  "photos/recente(/)": {
     "prefix": "photosRecent",
     "changeFreq": "daily",
     "priority": "1.0"
   },
-  "photos/timeline/": {
+  "photos/timeline(/)": {
     "prefix": "photosTimeline",
     "changeFreq": "daily",
     "priority": "1.0"
   },
-  "photos/timeline/:year/": {
+  "photos/timeline/:year(/)": {
     "prefix": "photosYear",
+    "changeFreq": "daily",
+    "priority": "1.0"
+  },
+  "photos/categorii/:folder(/)": {
+    "prefix": "photosFolder",
+    "changeFreq": "daily",
+    "priority": "1.0"
+  },
+  "photos/albume/:album(/)": {
+    "prefix": "photosAlbum",
     "changeFreq": "daily",
     "priority": "1.0"
   }

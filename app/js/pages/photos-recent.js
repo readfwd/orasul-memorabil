@@ -8,11 +8,13 @@ var $ = Backbone.$;
 
 module.exports = View.extend({
   pageTitle: 'Orasul Memorabil | Poze recente',
-  template: templates.pages.photosRecent,
 
   initialize: function (options) {
     options = options || {};
     this.slug = options.slug || 'photos-recent';
+    this.pageTitle = options.pageTitle || 'Orasul Memorabil | Poze recente';
+    this.documentClasses = options.documentClasses || ['recent-photos'];
+    this.template = options.template || templates.pages.photosRecent,
     this.filter = options.filter || {};
   },
 
@@ -27,6 +29,12 @@ module.exports = View.extend({
     }
     if (self.filter.decade) {
       uri = uri + '&decade=' + self.filter.decade;
+    }
+    if (self.filter.folder) {
+      uri = uri + '&folder=' + self.filter.folder;
+    }
+    if (self.filter.album) {
+      uri = uri + '&album=' + self.filter.album;
     }
 
     var xhr = $.ajax({
@@ -98,6 +106,6 @@ module.exports = View.extend({
   },
 
   customDocumentClasses: function () {
-    return ['recent-photos'];
+    return this.documentClasses;
   },
 });

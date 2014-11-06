@@ -40,6 +40,8 @@ api.get('/recent_photos', function(request, response) {
     var after = request.query.after;
     var count = parseInt(request.query.count);
     var decade = parseInt(request.query.decade);
+    var folder = request.query.folder;
+    var album = request.query.album;
     if (isNaN(count)) { count = 10; }
     if (count > 50) { count = 50; }
     var query = {};
@@ -53,6 +55,8 @@ api.get('/recent_photos', function(request, response) {
       }
       query.tags = { '$in': options };
     }
+    if (album) { query.album = album; }
+    if (folder) { query.folder = folder; }
     return photosCollection.find(query, {
       sort: { '_id': -1 },
       limit: count
