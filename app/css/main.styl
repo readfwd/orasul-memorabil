@@ -9,13 +9,6 @@ body
   background: om-butter
   -webkit-font-smoothing: antialiased !important
   -moz-osx-font-smoothing: grayscale !important
-  .navbar
-    background: om-dark-blue
-    position: fixed
-    top: 0
-    z-index: 100
-    width: 100%
-
 
 .content
   margin-top: 15px
@@ -23,7 +16,7 @@ body
   background-color: white
 
 [role="page-container"]
-  // padding-top: 50px
+  padding-top: 50px
   overflow: hidden
   @media (max-width: 767px)
     background: om-butter
@@ -31,30 +24,9 @@ body
 .home-page
   .social
     position: absolute
-  .logo
-    .white
-      display: block
-    .black
-      display: none
+  [role="page-container"]
+    padding-top: 0px
 
-
-.logo
-  position: absolute
-  top: 60%
-  img
-    height: 5em
-
-.om-logo
-  img
-    position: absolute
-    height: 2em !important
-    top: 50%
-    transform: translateY(-50%)
-@media (max-width: 991px)
-  .om-logo
-    img
-    top: 10%
-    transform: translateY(-5%)
 #photo-container
   .photo-preview
     position: relative

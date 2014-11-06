@@ -82,6 +82,16 @@ api.get('/folders', function(request, response) {
   });
 });
 
+api.get('/decades', function(request, response) {
+  Util.sendResponse(response, function() {
+    var r = [];
+    for (var i = 2010; i >= 1890; i -= 10) {
+      r.push(i);
+    }
+    return r;
+  });
+});
+
 api.get('/photo/:id', function (request, response) {
   Util.sendResponse(response, function() {
     return photosCollection.find({ _id: request.param('id') }).then(function(d) {

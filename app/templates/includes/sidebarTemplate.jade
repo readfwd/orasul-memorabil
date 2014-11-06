@@ -2,5 +2,6 @@ h1 SIDEBAR
 
 .well
   ol.breadcrumb
-    each album in albums
-      li: a(href="/photos/#{type}/" + encodeURIComponent("#{album}")) #{album}
+    if albums !== undefined
+      each album in albums
+        li: a(href="/photos/#{type}/" + encodeURIComponent("#{album}")) #{album}

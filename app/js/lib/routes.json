@@ -15,32 +15,17 @@
     "changeFreq": "daily",
     "priority": "1.0"
   },
-  "photos/timeline(/)": {
-    "prefix": "photosTimeline",
-    "changeFreq": "daily",
-    "priority": "1.0"
-  },
-  "photos/albume(/)": {
-    "prefix": "photosAlbum",
-    "changeFreq": "daily",
-    "priority": "1.0"
-  },
-  "photos/timeline/:year(/)": {
+  "photos/timeline(/:year)(/)": {
     "prefix": "photosYear",
     "changeFreq": "daily",
     "priority": "1.0"
   },
-  "photos/albume/:album(/)": {
+  "photos/albume(/:album)(/)": {
     "prefix": "photosAlbum",
     "changeFreq": "daily",
     "priority": "1.0"
   },
-  "photos/categorii/:folder(/)": {
-    "prefix": "photosFolder",
-    "changeFreq": "daily",
-    "priority": "1.0"
-  },
-  "photos/categorii(/)": {
+  "photos/categorii(/:folder)(/)": {
     "prefix": "photosFolder",
     "changeFreq": "daily",
     "priority": "1.0"

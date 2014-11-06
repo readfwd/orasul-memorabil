@@ -6,10 +6,12 @@ var routes = require('./lib/routes.json');
 
 var HomePage = require('./pages/home');
 var DespreProiectPage = require('./pages/despre-proiect');
-var PhotosPage = require('./pages/photos-recent');
+var PhotosSidebarPage = require('./pages/photos-sidebar');
+var PhotosRecentPage = require('./pages/photos-recent');
 var PhotosTimeline = require('./pages/timeline');
-var AlbumsPage = require('./pages/albums');
-var CategoriesPage = require ('./pages/categories');
+var PhotoPage = require ('./pages/photo');
+
+var om = 'Orasul Memorabil | ';
 
 module.exports = Router.extend({
   routes: _.mapValues(routes, function(route) {
@@ -29,36 +31,45 @@ module.exports = Router.extend({
   },
 
   photosRecent: function () {
-    this.switchPage(new PhotosPage({}));
+    this.switchPage(new PhotosRecentPage({}));
   },
 
   photosYear: function (year) {
-    this.switchPage(new PhotosPage({
+    this.switchPage(new PhotosSidebarPage({
       slug: 'photos-year',
-      pageTitle: 'Orasul Memorabil | Poze Anii \'' + year.toString().substr(2),
+      pageTitle: om + ((year === null) ? 
+        'Decade' : 
+        ('Poze Anii \'' + year.toString().substr(2))),
       filter: {
         decade: year,
       },
+      sidebarApiResource: '/decades'
     }));
   },
 
   photosAlbum: function (album) {
-    this.switchPage(new PhotosPage({
+    this.switchPage(new PhotosSidebarPage({
       slug: 'photos-album',
-      pageTitle: 'Orasul Memorabil | Albumul ' + album,
+      pageTitle: om + ((album === null) ? 
+        'Albume' :
+        ('Albumul ' + album)),
       filter: {
         album: album,
       },
+      sidebarApiResource: '/albums'
     }));
   },
 
   photosFolder: function (folder) {
-    this.switchPage(new PhotosPage({
+    this.switchPage(new PhotosSidebarPage({
       slug: 'photos-folder',
-      pageTitle: 'Orasul Memorabil | Colecția ' + folder,
+      pageTitle: om + ((folder === null) ?
+        'Colecții' :
+        ('Colecția ' + folder)),
       filter: {
         folder: folder,
       },
+      sidebarApiResource: '/folders'
     }));
   },
 
@@ -66,11 +77,9 @@ module.exports = Router.extend({
     this.switchPage(new PhotosTimeline({}));
   },
 
-  albume: function () {
-    this.switchPage(new AlbumsPage({}));
-  },
-
-  categorii: function () {
-    this.switchPage(new CategoriesPage({}));
+  photo: function (id) {
+    this.switchPage(new PhotoPage({
+      photoId: id 
+    }));
   }
 });
