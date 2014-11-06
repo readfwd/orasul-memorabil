@@ -111,8 +111,8 @@ var PhotosRecent = module.exports = View.extend({
     var msnry;
     window.imagesLoaded (container, function () {
       msnry = new window.Masonry (container, {
-        columnWidth: 260,
-        gutter: 5,
+        columnWidth: 15,
+        gutter: 0,
         itemSelector: '.photo-preview'
       });
     });

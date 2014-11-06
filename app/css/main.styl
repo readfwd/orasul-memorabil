@@ -28,17 +28,19 @@ body
     padding-top: 0px
 
 #photo-container
+  width: 100%
   .photo-preview
     position: relative
     display: block
     float: left
-    width: 260px
-    margin-bottom: 5px
+    width: 25%
+    // padding: 5px
+    margin-bottom: 10px
     img
-      width: 100%
+      width: 96%
       height: 100%
     .overlay
-      width: 100%
+      width: 96%
       height: 100%
       background-color: rgba(0,0,0,0.3)
       position: absolute
@@ -53,7 +55,7 @@ body
         left: 0
         background-color: rgba(0,0,0,0.80)
         width: 100%
-        margin: 0
+        padding: 5px
     &:hover .overlay
       display: block
 //   display: flex
