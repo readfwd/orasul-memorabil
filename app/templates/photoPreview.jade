@@ -1,6 +1,8 @@
 .photo-preview
   img(src=locals.thumbnailUri)
-  p= locals.album
-  p= locals.description
-  p= locals.folder
-  p= locals.tags
+  a(href="#" class="overlay")
+    .photo-info
+      p= locals.album
+      p= locals.description
+      p= locals.folder
+      p= locals.tags

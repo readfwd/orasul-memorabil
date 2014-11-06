@@ -21,8 +21,8 @@ module.exports = View.extend({
   loadPhotos: function (count, after) {
     var self = this;
 
-    // var apiUri =  'http://localhost:8080/api';
-    var apiUri = '/api';
+    var apiUri =  'http://andrei:8080/api';
+    // var apiUri = '/api';
     var uri = apiUri + '/recent_photos?count=' + count;
     if (after !== undefined) {
       uri = uri + '&after=' + after;
@@ -43,6 +43,9 @@ module.exports = View.extend({
       dataType: 'json',
     });
 
+    var msnry;
+
+
     self.$('#photo-loading').css('display', 'block');
 
     self.ongoingRequest = xhr;
@@ -55,14 +58,14 @@ module.exports = View.extend({
         self.reachedEnd = true;
       }
       for (var i = 0, n = data.length; i < n; i++) {
-        self.photoContainer.append(templates.photoPreview(data[i]));
+        self.photoContainer.append(templates.photoPreview(data[i]))
       }
-      self.handleMasonry();
     });
 
     xhr.always(function () {
       self.ongoingRequest = null;
       self.$('#photo-loading').css('display', 'none');
+      self.handleMasonry();
     });
   },
 
@@ -87,6 +90,7 @@ module.exports = View.extend({
       }, 500);
       $(window).on('scroll', self.loadMoreHandler);
     }
+
     return self;
   },
 
@@ -103,6 +107,9 @@ module.exports = View.extend({
     if (!self.ongoingRequest && !self.reachedEnd) {
       self.loadPhotos(15, self.lastId);
     }
+    // $('.photo-preview').hover( function () {
+    //   $('.photo-info').toggleClass('hidden');
+    // })
   },
 
   customDocumentClasses: function () {
@@ -111,10 +118,15 @@ module.exports = View.extend({
 
   handleMasonry: function () {
     var container = self.$('#photo-container')[0];
-    var msnry = new Masonry (container, {
-      columnWidth: 20,
-      gutter: 5,
-      itemSelector: '.photo-preview'
-    })
+    var msnry;
+    imagesLoaded (container, function () {
+      msnry = new Masonry (container, {
+        columnWidth: 260,
+        gutter: 5,
+        itemSelector: '.photo-preview'
+      })
+    });
+
+
   }
 });

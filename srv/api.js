@@ -47,10 +47,10 @@ api.get('/recent_photos', function(request, response) {
     var query = {};
 
     // remove all records with tags 'E0' or 'spate'
-    query.tags = { $nin: ['E0','spate'] };
+    query.tags = { '$nin': ['E0','spate'] };
 
     if (after) {
-      query = { _id: { '$lt': photosCollection.id(after) } };
+      query._id = { '$lt': photosCollection.id(after) };
     }
     if (!isNaN(decade)) {
       options = ['a' + decade];
@@ -62,7 +62,6 @@ api.get('/recent_photos', function(request, response) {
     }
     if (album) { query.album = album; }
     if (folder) { query.folder = folder; }
-
 
     return photosCollection.find(query, {
       sort: { '_id': -1 },
@@ -178,4 +177,3 @@ if (s3Opts.accessKeyId && s3Opts.secretAccessKey && s3Opts.region && s3Bucket) {
     });
   });
 }
-
