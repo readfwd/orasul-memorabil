@@ -9,6 +9,13 @@ body
   background: #eee
   -webkit-font-smoothing: antialiased !important
   -moz-osx-font-smoothing: grayscale !important
+  .navbar
+    background: om-dark-blue
+    position: fixed
+    top: 0
+    z-index: 100
+    width: 100%
+
 
 .content
   margin-top: 15px
@@ -16,12 +23,49 @@ body
   background-color: white
 
 [role="page-container"]
-  padding-top: 50px
+  // padding-top: 50px
+  overflow: hidden
   @media (max-width: 767px)
     background: #eee
 
 [data-page='home']
   .social
     position: absolute
-  [role="page-container"]
-    padding-top: 0px
+  .logo
+    .white
+      display: block
+    .black
+      display: none
+
+
+.logo
+  position: absolute
+  top: 60%
+  img
+    height: 5em
+
+.om-logo
+  img
+    position: absolute
+    height: 2em !important
+    top: 50%
+    transform: translateY(-50%)
+@media (max-width: 991px)
+  .om-logo
+    img
+    top: 10%
+    transform: translateY(-5%)
+#photo-container
+  display: flex
+  flex-flow: row wrap
+  justify-content: space-between
+  align-items: stretch
+  align-content: flex-start
+  .photo-preview
+    max-width: 250px
+    background: white
+    padding: 0.2em
+    margin-bottom: 1em
+    img
+      width: 100%
+      height: auto

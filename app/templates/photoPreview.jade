@@ -1,5 +1,7 @@
 .photo-preview
   img(src=locals.thumbnailUri)
-  span= locals.title
-  span= locals.description
-
+  p= locals.album
+  p= locals.description
+  p= locals.folder
+  p= locals.tags
+ - console.log (locals)
