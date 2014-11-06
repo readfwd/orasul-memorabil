@@ -1,0 +1,6 @@
+h1 SIDEBAR
+
+.well
+  ol.breadcrumb
+    each album in albums
+      li: a(href="/photos/#{type}/" + encodeURIComponent("#{album}")) #{album}

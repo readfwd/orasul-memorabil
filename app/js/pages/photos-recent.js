@@ -7,7 +7,7 @@ var _ = require('lodash');
 var $ = Backbone.$;
 var api = require('../lib/api');
 
-module.exports = View.extend({
+var PhotosRecent = module.exports = View.extend({
   pageTitle: 'Orasul Memorabil | Poze recente',
 
   initialize: function (options) {
@@ -15,7 +15,7 @@ module.exports = View.extend({
     this.slug = options.slug || 'photos-recent';
     this.pageTitle = options.pageTitle || 'Orasul Memorabil | Poze recente';
     this.documentClasses = options.documentClasses || ['recent-photos'];
-    this.template = options.template || templates.pages.photosRecent,
+    this.template = options.template || templates.pages.photosRecent;
     this.filter = options.filter || {};
   },
 
@@ -88,7 +88,7 @@ module.exports = View.extend({
     if (self.boundEvents) {
       $(window).off('scroll', self.loadMoreHandler);
     }
-    self.constructor.__super__.stopListening.apply(this, arguments);
+    PhotosRecent.__super__.stopListening.apply(this, arguments);
   },
 
   loadMorePhotos: function () {
@@ -109,8 +109,8 @@ module.exports = View.extend({
     var self = this;
     var container = self.$('#photo-container')[0];
     var msnry;
-    imagesLoaded (container, function () {
-      msnry = new Masonry (container, {
+    window.imagesLoaded (container, function () {
+      msnry = new window.Masonry (container, {
         columnWidth: 260,
         gutter: 5,
         itemSelector: '.photo-preview'

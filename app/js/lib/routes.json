@@ -21,7 +21,7 @@
     "priority": "1.0"
   },
   "photos/albume(/)": {
-    "prefix": "albume",
+    "prefix": "photosAlbum",
     "changeFreq": "daily",
     "priority": "1.0"
   },
@@ -41,7 +41,7 @@
     "priority": "1.0"
   },
   "photos/categorii(/)": {
-    "prefix": "categorii",
+    "prefix": "photosFolder",
     "changeFreq": "daily",
     "priority": "1.0"
   },
