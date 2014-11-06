@@ -12,6 +12,10 @@ var gm = require('gm');
 var Util = require('./util');
 
 var api = express.Router();
+
+var routes = require('../app/js/lib/routes.json');
+var xml = require('xml-writer');
+
 module.exports = api;
 
 // Connect to the database
@@ -70,25 +74,37 @@ api.get('/recent_photos', function(request, response) {
   });
 });
 
-api.get('/albums', function(request, response) {
-  Util.sendResponse(response, function() {
+function getAlbums() {
     return photosCollection.distinct('album');
-  });
-});
+}
 
-api.get('/folders', function(request, response) {
-  Util.sendResponse(response, function() {
+function getFolders() {
     return photosCollection.distinct('folder');
-  });
-});
+}
 
-api.get('/decades', function(request, response) {
-  Util.sendResponse(response, function() {
+function getDecades() {
     var r = [];
     for (var i = 2010; i >= 1890; i -= 10) {
       r.push(i);
     }
     return r;
+}
+
+api.get('/albums', function(request, response) {
+  Util.sendResponse(response, function() {
+    return getAlbums();
+  });
+});
+
+api.get('/folders', function(request, response) {
+  Util.sendResponse(response, function() {
+    return getFolders();
+  });
+});
+
+api.get('/decades', function(request, response) {
+  Util.sendResponse(response, function() {
+    return getDecades();
   });
 });
 
@@ -101,6 +117,63 @@ api.get('/photo/:id', function (request, response) {
       return d[0];
     });
   });
+});
+
+// Sitemap
+api.get('/sitemap.xml', function (request, response) {
+  when.all([getAlbums(), getFolders(), getDecades()])
+    .then(function(v) {
+      var albums = v[0];
+      var folders = v[1];
+      var decades = v[2];
+  
+      var sitemap = new xml();
+      var baseLink = "http://orasulmemorabil.ro/";
+
+      sitemap.startDocument();
+      sitemap.startElement('urlset').writeAttribute('xmlns', "http://www.sitemaps.org/schemas/sitemap/0.9")
+        .writeAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance")
+        .writeAttribute('xsi:schemaLocation', "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd");
+
+      var expandedRoutes = {};
+      var euc = encodeURIComponent;
+      _.each(routes, function (route, path) {
+        path = path.replace('(/)', '/'); 
+        if (path.match(/\([^)(]*\)/)) {
+          expandedRoutes[path.replace(/\([^()]*\)/, '')] = route;
+          path = path.replace(/\(([^()]*)\)/, '$1');
+        }
+        if (path.match(/:folder/)) {
+          _.each(folders, function (folder) {
+            expandedRoutes[path.replace(/:folder/, euc(folder))] = route;
+          });
+        } else if (path.match(/:album/)) {
+          _.each(albums, function (album) {
+            expandedRoutes[path.replace(/:album/, euc(album))] = route;
+          });
+        } else if (path.match(/:decade/)) {
+          _.each(decades, function (decade) {
+            expandedRoutes[path.replace(/:decade/, euc(decade))] = route;
+          });
+        } else {
+          expandedRoutes[path] = route;
+        }
+      });
+
+      _.each(expandedRoutes, function (route, path) {
+        if (route.skip) { return; }
+
+        sitemap.startElement('url')
+          .startElement('loc').text(baseLink + path).endElement()
+          .startElement('priority').text(route.priority).endElement()
+          .startElement('changefreq').text(route.changeFreq).endElement()
+          .endElement();
+
+      });
+      sitemap.endElement();
+      sitemap.endDocument();
+      response.end(sitemap.toString());
+    });
 });
 
 // AWS Credentials

@@ -2,7 +2,6 @@
   "": {
     "prefix": "home",
     "changeFreq": "daily",
-    "skip": true,
     "priority": "1.0"
   },
   "despre-proiect(/)": {
@@ -32,6 +31,7 @@
   },
   "photo/:id(/)": {
     "prefix": "photo",
+    "skip": true,
     "changeFreq": "daily",
     "priority": "1.0"
   }
