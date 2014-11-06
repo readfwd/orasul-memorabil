@@ -6,15 +6,15 @@ var templates = require('../lib/templates');
 var $ = Backbone.$;
 
 module.exports = View.extend({
-  pageTitle: 'Orasul Memorabil | Albume',
-  slug: 'albume',
-  template: templates.pages.albums,
+  pageTitle: 'Orasul Memorabil | Categorii',
+  slug: 'categorii',
+  template: templates.pages.categories,
 
   initialize: function () {
     var self = this;
 
-    var apiUri =  'http://localhost:8080/api/albums';
-    // var apiUri = '/api/albums';
+    var apiUri =  'http://localhost:8080/api/folders';
+    // var apiUri = '/api/folders';
 
     var xhr = $.ajax({
       url: apiUri,
@@ -23,7 +23,7 @@ module.exports = View.extend({
     });
 
     xhr.done(function (data) {
-      self.albums = data;
+      self.categories = data;
       self.render();
     });
 
@@ -34,9 +34,9 @@ module.exports = View.extend({
 
   render: function () {
     var self = this;
-    if (self.albums) {
+    if (self.categories) {
       self.$el.html(self.template({
-        albums: self.albums
+        categories: self.categories
       }));
     }
     return self;

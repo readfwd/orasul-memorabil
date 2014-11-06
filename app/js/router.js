@@ -1,7 +1,6 @@
 'use strict';
 
 var Router = require('ampersand-router');
-var $ = require('./shims/jquery');
 var _ = require('lodash');
 var routes = require('./lib/routes.json');
 
@@ -10,6 +9,7 @@ var DespreProiectPage = require('./pages/despre-proiect');
 var PhotosPage = require('./pages/photos-recent');
 var PhotosTimeline = require('./pages/timeline');
 var AlbumsPage = require('./pages/albums');
+var CategoriesPage = require ('./pages/categories');
 
 module.exports = Router.extend({
   routes: _.mapValues(routes, function(route) {
@@ -67,6 +67,10 @@ module.exports = Router.extend({
   },
 
   albume: function () {
-    this.switchPage(new AlbumsPage({}))
+    this.switchPage(new AlbumsPage({}));
+  },
+
+  categorii: function () {
+    this.switchPage(new CategoriesPage({}));
   }
 });

@@ -1,0 +1,7 @@
+.container
+  h2 Categorii
+  .well
+    ol.breadcrumb
+      each category in categories
+        li: a(href="/photos/categorii/" + encodeURIComponent("#{category}")) #{category}
+  

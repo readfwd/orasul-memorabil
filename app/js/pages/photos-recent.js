@@ -21,8 +21,9 @@ module.exports = View.extend({
   loadPhotos: function (count, after) {
     var self = this;
 
-    var apiUri =  'http://andrei:8080/api';
+    var apiUri =  'http://localhost:8080/api';
     // var apiUri = '/api';
+
     var uri = apiUri + '/recent_photos?count=' + count;
     if (after !== undefined) {
       uri = uri + '&after=' + after;
