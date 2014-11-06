@@ -44,5 +44,10 @@
     "prefix": "categorii",
     "changeFreq": "daily",
     "priority": "1.0"
+  },
+  "photo/:slug": {
+    "prefix": "photo",
+    "changeFreq": "daily",
+    "priority": "1.0"
   }
 }

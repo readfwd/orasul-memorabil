@@ -13,8 +13,8 @@ module.exports = View.extend({
   initialize: function () {
     var self = this;
 
-    // var apiUri =  'http://localhost:8080/api/folders';
-    var apiUri = '/api/folders';
+    var apiUri =  'http://localhost:8080/api/folders';
+    // var apiUri = '/api/folders';
 
     var xhr = $.ajax({
       url: apiUri,

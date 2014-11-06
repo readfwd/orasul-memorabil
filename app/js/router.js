@@ -10,6 +10,7 @@ var PhotosPage = require('./pages/photos-recent');
 var PhotosTimeline = require('./pages/timeline');
 var AlbumsPage = require('./pages/albums');
 var CategoriesPage = require ('./pages/categories');
+var PhotoViewPage = require ('./pages/photo-view');
 
 module.exports = Router.extend({
   routes: _.mapValues(routes, function(route) {
@@ -72,5 +73,11 @@ module.exports = Router.extend({
 
   categorii: function () {
     this.switchPage(new CategoriesPage({}));
+  },
+
+  photo: function (slug) {
+    this.switchPage(new PhotoViewPage({
+      slug: slug
+    }));
   }
 });
