@@ -82,6 +82,16 @@ api.get('/folders', function(request, response) {
   });
 });
 
+api.get('/photo/:id', function (request, response) {
+  Util.sendResponse(response, function() {
+    return photosCollection.find({ _id: request.param('id') }).then(function(d) {
+      if (!d.length) {
+        throw new Util.HTTPError(404, 'No photo with this id');
+      }
+      return d[0];
+    });
+  });
+});
 
 // AWS Credentials
 var s3Opts = {

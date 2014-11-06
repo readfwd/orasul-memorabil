@@ -1,0 +1,9 @@
+.container
+  if photo === undefined
+    h2 
+      i.fa.fa-spinner.fa-spin
+      |  Imaginea se încarcă
+  else
+    h2= photo.title
+    img(src=photo.uri, style='width: 100%; height: auto')
+    div= photo.description

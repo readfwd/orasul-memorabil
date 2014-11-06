@@ -8,9 +8,7 @@ var HomePage = require('./pages/home');
 var DespreProiectPage = require('./pages/despre-proiect');
 var PhotosPage = require('./pages/photos-recent');
 var PhotosTimeline = require('./pages/timeline');
-var AlbumsPage = require('./pages/albums');
-var CategoriesPage = require ('./pages/categories');
-var PhotoViewPage = require ('./pages/photo-view');
+var PhotoPage = require ('./pages/photo');
 
 module.exports = Router.extend({
   routes: _.mapValues(routes, function(route) {
@@ -68,16 +66,16 @@ module.exports = Router.extend({
   },
 
   albume: function () {
-    this.switchPage(new AlbumsPage({}));
+    //this.switchPage(new AlbumsPage({}));
   },
 
   categorii: function () {
-    this.switchPage(new CategoriesPage({}));
+    //this.switchPage(new CategoriesPage({}));
   },
 
-  photo: function (slug) {
-    this.switchPage(new PhotoViewPage({
-      slug: slug
+  photo: function (id) {
+    this.switchPage(new PhotoPage({
+      photoId: id 
     }));
   }
 });

@@ -45,7 +45,7 @@
     "changeFreq": "daily",
     "priority": "1.0"
   },
-  "photo/:slug": {
+  "photo/:id(/)": {
     "prefix": "photo",
     "changeFreq": "daily",
     "priority": "1.0"

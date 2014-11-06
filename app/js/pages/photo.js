@@ -3,27 +3,33 @@
 var Backbone = require('../shims/backbone');
 var View = Backbone.View;
 var templates = require('../lib/templates');
-
+var api = require('../lib/api');
 
 module.exports = View.extend({
   pageTitle: 'Orasul Memorabil | Imagine',
-  slug: 'despre-proiect',
-  template: templates.pages.photoView,
+  slug: 'photo',
+  template: templates.pages.photo,
 
   initialize: function (options) {
-    this.slug = options.slug || {};
+    var self = this;
+    self.photoId = options.photoId|| {};
+
+    api('/photo/' + self.photoId).then(function (data) {
+      self.photo = data;
+      document.title = 'Orasul Memorabil | ' + data.title;
+      self.render();
+    });
   },
 
   render: function () {
-    console.log(this.slug);
     var self = this;
     self.$el.html(self.template({
-      slug: this.slug
+      id: this.photoId,
+      photo: this.photo,
     }));
-    return self;
   },
 
   customDocumentClasses: function () {
-    return ['photo-page'];
+    return ['photo'];
   },
 });

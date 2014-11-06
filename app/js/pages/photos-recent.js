@@ -5,6 +5,7 @@ var View = Backbone.View;
 var templates = require('../lib/templates');
 var _ = require('lodash');
 var $ = Backbone.$;
+var api = require('../lib/api');
 
 module.exports = View.extend({
   pageTitle: 'Orasul Memorabil | Poze recente',
@@ -21,10 +22,7 @@ module.exports = View.extend({
   loadPhotos: function (count, after) {
     var self = this;
 
-    var apiUri =  'http://localhost:8080/api';
-    // var apiUri = '/api';
-
-    var uri = apiUri + '/recent_photos?count=' + count;
+    var uri = '/recent_photos?count=' + count;
     if (after !== undefined) {
       uri = uri + '&after=' + after;
     }
@@ -38,17 +36,12 @@ module.exports = View.extend({
       uri = uri + '&album=' + self.filter.album;
     }
 
-    var xhr = $.ajax({
-      url: uri,
-      method: 'GET',
-      dataType: 'json',
-    });
+    var apiCall = api(uri);
+    self.ongoingRequest = apiCall;
 
     self.$('#photo-loading').css('display', 'block');
 
-    self.ongoingRequest = xhr;
-
-    xhr.done(function (data) {
+    apiCall.then(function (data) {
       if (data.length) {
         self.lastId = data[data.length - 1]._id;
       }
@@ -56,11 +49,9 @@ module.exports = View.extend({
         self.reachedEnd = true;
       }
       for (var i = 0, n = data.length; i < n; i++) {
-        self.photoContainer.append(templates.photoPreview(data[i]))
+        self.photoContainer.append(templates.photoPreview(data[i]));
       }
-    });
-
-    xhr.always(function () {
+    }).finally(function () {
       self.ongoingRequest = null;
       self.$('#photo-loading').css('display', 'none');
       self.handleMasonry();
@@ -71,7 +62,7 @@ module.exports = View.extend({
     var self = this;
     self.$el.html(self.template());
     if (self.ongoingRequest) {
-      self.ongoingRequest.cancel();
+      self.ongoingRequest.xhr.cancel();
       self.ongoingRequest = null;
     }
     self.reachedEnd = false;
