@@ -3,6 +3,8 @@
 var PhotosRecent = require ('./photos-recent');
 var templates = require ('../lib/templates');
 var api = require('../lib/api');
+var $ = require('../shims/jquery');
+var _ = require ('lodash');
 
 var cache = {};
 
@@ -15,6 +17,9 @@ var PhotosSidebar = module.exports = PhotosRecent.extend({
     this.sidebarApiResource = options.sidebarApiResource || '/albums';
 
     var self = this;
+    this.filter = options.filter;
+
+    console.log(_.values(options.filter)[0])
 
     var cacheEntry = cache[self.sidebarApiResource];
     if (cacheEntry) {
@@ -31,27 +36,35 @@ var PhotosSidebar = module.exports = PhotosRecent.extend({
   },
 
   renderSidebar: function () {
-    var type = this.sidebarApiResource.slice(1);
+    this.type = this.sidebarApiResource.slice(1);
 
-    if (type === 'folders') {
-      type = 'categorii';
+    if (this.type === 'folders') {
+      this.type = 'categorii';
     }
-    if (type === 'albums') {
-      type = 'albume';
+    if (this.type === 'albums') {
+      this.type = 'albume';
     }
-    if (type === 'decades') {
-      type = 'timeline';
+    if (this.type === 'decades') {
+      this.type = 'timeline';
     }
 
     this.sidebar = this.$('#photo-sidebar');
     this.sidebar.html(this.sidebarTemplate({
-      type: type,
+      type: this.type,
       albums: this.data,
     }));
+
+    this.handleLinkClick();
+
   },
 
   render: function () {
     PhotosSidebar.__super__.render.call(this);
     this.renderSidebar();
+  },
+
+  handleLinkClick: function () {
+    this.$('#photo-sidebar a').parent().removeClass('active');
+    this.$('#photo-sidebar a[href="/photos/' + this.type + '/'+ encodeURIComponent(_.values(this.filter)[0]) + '"]').parent().addClass('active');
   }
 });

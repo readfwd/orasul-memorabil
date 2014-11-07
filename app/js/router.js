@@ -37,8 +37,8 @@ module.exports = Router.extend({
   photosYear: function (year) {
     this.switchPage(new PhotosSidebarPage({
       slug: 'photos-year',
-      pageTitle: om + ((year === null) ? 
-        'Decade' : 
+      pageTitle: om + ((year === null) ?
+        'Decade' :
         ('Poze Anii \'' + year.toString().substr(2))),
       filter: {
         decade: year,
@@ -50,7 +50,7 @@ module.exports = Router.extend({
   photosAlbum: function (album) {
     this.switchPage(new PhotosSidebarPage({
       slug: 'photos-album',
-      pageTitle: om + ((album === null) ? 
+      pageTitle: om + ((album === null) ?
         'Albume' :
         ('Albumul ' + album)),
       filter: {
@@ -79,7 +79,7 @@ module.exports = Router.extend({
 
   photo: function (id) {
     this.switchPage(new PhotoPage({
-      photoId: id 
+      photoId: id
     }));
   }
 });

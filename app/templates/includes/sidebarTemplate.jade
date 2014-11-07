@@ -4,4 +4,5 @@ h1 SIDEBAR
   ol.breadcrumb
     if albums !== undefined
       each album in albums
-        li: a(href="/photos/#{type}/" + encodeURIComponent("#{album}")) #{album}
+        li: a(href="/photos/#{type}/" + encodeURIComponent(album)) #{album}
+        
