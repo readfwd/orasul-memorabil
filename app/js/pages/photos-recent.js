@@ -51,10 +51,10 @@ var PhotosRecent = module.exports = View.extend({
       for (var i = 0, n = data.length; i < n; i++) {
         self.photoContainer.append(templates.photoPreview(data[i]));
       }
+      self.handleMasonry();
     }).finally(function () {
       self.ongoingRequest = null;
       self.$('#photo-loading').css('display', 'none');
-      self.handleMasonry();
     });
   },
 
@@ -72,8 +72,7 @@ var PhotosRecent = module.exports = View.extend({
     if (!self.boundEvents) {
       self.boundEvents = true;
       self.loadMoreHandler = _.throttle(function () {
-        var $body = $('body');
-        if ($body.height() - ($(window).height() + $body[0].scrollTop) < 500) {
+        if ($(document).height() - ($(window).height() + $(document).scrollTop()) < 500) {
           self.loadMorePhotos();
         }
       }, 500);
