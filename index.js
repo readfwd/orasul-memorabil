@@ -3,6 +3,7 @@
 var express = require('express');
 var compression = require('compression');
 var seo = require('mean-seo');
+var modRewrite = require('connect-modrewrite');
 
 // For uploading photos to S3 / MongoDB
 var api = require('./srv/api');
@@ -10,6 +11,8 @@ var api = require('./srv/api');
 // Create the express app
 var app = express();
 
+// Sitemap
+app.use(modRewrite([ '^/sitemap.xml$ /api/sitemap.xml' ]));
 
 // Enable gzip compression.
 app.use(compression());
@@ -23,17 +26,11 @@ if (process.env.REDISCLOUD_URL) {
   app.use(seo());
 }
 
-// The static website
-app.use(express.static(__dirname + '/dist'));
-
-// The sitemap
-app.get('/sitemap.xml', function(request, response, next) {
-  request.url = '/api/sitemap.xml';
-  next();
-});
-
 // The photos API
 app.use('/api', api);
+
+// The static website
+app.use(express.static(__dirname + '/dist'));
 
 // Index.html
 app.get('*', function(request, response) {
