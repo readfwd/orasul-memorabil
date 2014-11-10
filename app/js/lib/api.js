@@ -11,6 +11,7 @@ var Api = function (endpoint) {
     url: uri,
     method: 'GET',
     dataType: 'json',
+    mimeType: 'application/json',
   });
 
   var promise = when.promise(function (resolve, reject) {
