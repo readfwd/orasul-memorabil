@@ -115,7 +115,13 @@ var PhotosRecent = module.exports = View.extend({
         itemSelector: '.photo-preview'
       });
     });
-
-
+    $('.photo-preview').on('mouseenter', function () {
+      $(this).addClass('hovered');
+      $('.photo-preview').not(this).addClass('not-hovered');
+    });
+    $('.photo-preview').on('mouseleave', function () {
+      $(this).removeClass('hovered');
+      $('.photo-preview').not(this).removeClass('not-hovered');
+    });
   }
 });

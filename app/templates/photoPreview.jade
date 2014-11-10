@@ -1,8 +1,11 @@
 .photo-preview
-  img(src=locals.thumbnailUri)
-  a(href="/photo/#{_id}" class="overlay")
-    .photo-info
-      p= locals.album
-      p= locals.description
-      p= locals.folder
-      p= locals.tags
+  .photo-preview-info
+    img(src=locals.thumbnailUri)
+    a(href="/photo/#{_id}" class="overlay")
+      .photo-info
+        p
+          span= locals.album
+          br
+          span= locals.folder
+          br
+          span= locals.tags
