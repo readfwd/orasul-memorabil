@@ -19,6 +19,7 @@ module.exports = View.extend({
       document.title = 'Orasul Memorabil | ' + data.title;
       self.render();
     });
+
   },
 
   render: function () {
@@ -31,5 +32,5 @@ module.exports = View.extend({
 
   customDocumentClasses: function () {
     return ['photo'];
-  },
+  }
 });

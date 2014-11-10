@@ -3,7 +3,6 @@
 var PhotosRecent = require ('./photos-recent');
 var templates = require ('../lib/templates');
 var api = require('../lib/api');
-var $ = require('../shims/jquery');
 var _ = require ('lodash');
 
 var cache = {};
@@ -19,7 +18,7 @@ var PhotosSidebar = module.exports = PhotosRecent.extend({
     var self = this;
     this.filter = options.filter;
 
-    console.log(_.values(options.filter)[0])
+    // console.log(_.values(options.filter)[0])
 
     var cacheEntry = cache[self.sidebarApiResource];
     if (cacheEntry) {

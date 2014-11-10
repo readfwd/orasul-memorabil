@@ -7,3 +7,31 @@
     h2= photo.title
     img(src=photo.uri, style='width: 100%; height: auto')
     div= photo.description
+  #disqus_thread
+  script(type='text/javascript').
+    var disqus_shortname = 'orasulmemorabil'; // required: replace example with your forum shortname
+    var disqus_identifier = '#{id}';
+    var disqus_url = window.location.href
+      .replace(/#([^!])/, '#!$1');
+    if (!window.disqus_already_loaded) {
+      (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+      window.disqus_already_loaded = true;
+    } else {
+      window.DISQUS.reset({
+        reload: true,
+        config: function () {
+          this.page.identifier = disqus_identifier;
+          this.page.url = disqus_url;
+        }
+      });
+    }
+  noscript
+    | Please enable JavaScript to view the
+    a(href='http://disqus.com/?ref_noscript') comments powered by Disqus.
+  a.dsq-brlink(href='http://disqus.com')
+    | comments powered by
+    span.logo-disqus Disqus
