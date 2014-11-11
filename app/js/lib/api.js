@@ -1,5 +1,5 @@
-// var hostUri = 'http://andrei:8080'; //Development
-var hostUri = ''; //Production
+var hostUri = 'http://andrei:8080'; //Development
+// var hostUri = ''; //Production
 
 var $ = require('../shims/jquery');
 var when = require('when');
