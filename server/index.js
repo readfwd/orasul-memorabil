@@ -29,15 +29,18 @@ if (process.env.REDISCLOUD_URL) {
 // The photos API
 app.use('/api', api);
 
+var dist = __dirname + '/../public';
+
 // The static website
-app.use(express.static(__dirname + '/dist'));
+app.use(express.static(dist));
 
 // Index.html
 app.get('*', function(request, response) {
-  response.sendFile(__dirname + '/dist/index.html');
+  response.sendFile(dist + '/index.html');
 });
 
 var port = process.env.PORT || 8080;
 app.listen(port, function () {
   console.log('Listening on port: ' + port + '.');
+  if (process.send) { process.send('serverStarted'); }
 });

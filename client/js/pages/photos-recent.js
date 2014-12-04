@@ -6,6 +6,8 @@ var templates = require('../lib/templates');
 var _ = require('lodash');
 var $ = Backbone.$;
 var api = require('../lib/api');
+var Masonry = require('masonry-layout');
+var imagesLoaded = require('imagesloaded');
 
 var PhotosRecent = module.exports = View.extend({
   pageTitle: 'Orasul Memorabil | Poze recente',
@@ -108,8 +110,8 @@ var PhotosRecent = module.exports = View.extend({
     var self = this;
     var container = self.$('#photo-container')[0];
     var msnry;
-    window.imagesLoaded (container, function () {
-      msnry = new window.Masonry (container, {
+    imagesLoaded(container, function () {
+      msnry = new Masonry (container, {
         columnWidth: 15,
         gutter: 0,
         itemSelector: '.photo-preview'

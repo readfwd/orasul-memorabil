@@ -1,223 +1,334 @@
 'use strict';
 
-/* global __dirname */
-var gulp = require('gulp');
-
 var config = require('./_config.js');
 var paths = config.paths;
 var $ = config.plugins;
+
+var runServer = require('./server');
+
 var _ = require('lodash');
-
-var wiredep = require('wiredep').stream;
+var when = require('when');
 var nodefn = require('when/node');
-var fs = require('fs');
-var exec = require('child_process').exec;
-var source = require('vinyl-source-stream');
-var browserify = require('browserify');
-var browserifyIncremental = require('browserify-incremental');
-var browserSync = require('browser-sync');
-var templatizer = require('templatizer');
-var penthouse = require('penthouse');
-var express = require('express');
+
 var path = require('path');
+var fs = require('fs.extra');
+
+var gulp = require('gulp');
+var wiredep = require('wiredep').stream;
+var vinylBuffer = require('vinyl-buffer');
+var source = require('vinyl-source-stream');
+
+var penthouse = require('penthouse');
+var templatizer = require('templatizer');
 var mainBowerFiles = require('main-bower-files');
-var fs = require('fs');
+var browserSync = require('browser-sync');
+var useref = require('node-useref');
+var StreamQueue = require('streamqueue');
 
-var opts = {
-  autoprefixer: [
-    'ie >= 8',
-    'ie_mob >= 9',
-    'ff >= 30',
-    'chrome >= 30',
-    'safari >= 6',
-    'opera >= 23',
-    'ios >= 6',
-    'android >= 2.3',
-    'bb >= 9'
-  ]
-};
+var browserify = require('browserify');
+var istanbul = require('browserify-istanbul');
+var debowerify = require('debowerify');
+var deamdify = require('deamdify');
+var aliasify = require('aliasify');
+var filterTransform = require('filter-transform');
 
-// Wire Bower dependencies into the main jade file.
-gulp.task('wiredep', function () {
-  return gulp.src(paths.app + '/index.jade')
-    .pipe(wiredep())
-    .pipe(gulp.dest(paths.app));
+//--- Generate JS files
+
+// Generate JS functions from Jade templates.
+gulp.task('templates' , function () {
+  var templates = templatizer(paths.client + '/templates', null, {});
+  return nodefn.call(fs.mkdirp, paths.client + '/js/lib').then(function () {
+    return nodefn.call(fs.writeFile, paths.client + '/js/lib/templates.js', templates);
+  });
 });
 
-// Turn index.jade into an HTML file.
-gulp.task('index.html', ['wiredep'], function () {
-  return gulp.src(paths.app + '/index.jade')
+// Load all Bower components into a single package
+gulp.task('bower-components:js', function () {
+  var packages = {};
+
+  _.each(mainBowerFiles({ 
+    filter: '**/*.js',
+  }), function (file) {
+    file = path.relative(paths.client + '/bower_components', file);
+    packages[file.split('/')[0]] = true;
+  });
+
+  var contents = _.map(_.keys(packages), function(pkg) {
+    var req = 'require(\'' + pkg + '\');\n';
+    var gl = config.bowerGlobals[pkg];
+    if (typeof(gl) === 'string') {
+      gl = [gl];
+    } else if ((typeof(gl) !== 'object') || !(gl instanceof Array)) {
+      gl = [];
+    }
+
+    if (gl.length) {
+      return 'window.' + gl.join(' = window.') + ' = ' + req;
+    } 
+    return req;
+  }).join('');
+
+  return nodefn.call(fs.mkdirp, paths.client + '/js/lib').then(function () {
+    return nodefn.call(fs.writeFile, paths.client + '/js/lib/bower-components.js', contents);
+  });
+});
+
+// Run this before any JS task, because Browserify needs to bundle them in.
+gulp.task('js:dependencies', ['templates', 'bower-components:js'], function () {});
+
+var incrementalBundle = null;
+function generateMainJS(opts) {
+  opts = opts || {};
+
+  var browserifyOpts = _.extend({
+    entries: [paths.client + '/js/main.js'],
+    debug: !!opts.debug
+  }, config.browserify);
+
+  var bundle, stream;
+
+  opts.incremental = false;
+
+  if (opts.incremental && incrementalBundle) {
+    bundle = incrementalBundle;
+  } else {
+    bundle = browserify(browserifyOpts);
+    bundle.transform(aliasify.configure(config.aliasify));
+    bundle.transform(debowerify);
+    bundle.transform(filterTransform(function (file) {
+      return /bower_components/.test(file);
+    } ,deamdify));
+    if (opts.instanbul) {
+      bundle.transform(istanbul({
+        ignore: ['**/lib/**']
+      }));
+    }
+  }
+
+  if (opts.incremental) { 
+    incrementalBundle = bundle;
+  }
+
+  stream = bundle.bundle();
+
+  if (opts.uglify) {
+    stream = stream.pipe($.uglify());
+  }
+
+  return stream
+    .pipe(source(paths.client + '/js/main.js'))
+    .pipe($.rename('main.js'));
+}
+
+// Bundles Browserify for production; no source or coverage maps.
+gulp.task('js:dist', ['js:dependencies', 'index.html:dist'], function () {
+  return resolveRef(generateMainJS(), refSpec.js, 'js/main.js')
+    .pipe($.uglify())
+    .pipe(gulp.dest(paths.public));
+});
+
+// Bundles Browserify with Istanbul coverage maps.
+gulp.task('js:coverage', ['js:dependencies'], function () {
+  return generateMainJS({
+    debug: true,
+    istanbul: true,
+  }).pipe(gulp.dest(paths.public + '/js/'));
+});
+
+// Bundles Browserify incrementally with source maps
+gulp.task('js', ['js:dependencies'], function () {
+  return generateMainJS({
+    debug: true,
+    incremental: true,
+  }).pipe(gulp.dest(paths.public + '/js/'))
+    .pipe(browserSync.reload({stream: true}));
+});
+
+// Same as above, just without re-running the deps (for watch)
+gulp.task('js:no-deps', function () {
+  return generateMainJS({
+    debug: true,
+    incremental: true,
+  }).pipe(gulp.dest(paths.public + '/js/'))
+    .pipe(browserSync.reload({stream: true}));
+});
+
+//--- Generate main.css
+
+function generateMainCSS() {
+  return gulp.src(paths.client + '/css/main.styl')
+    .pipe($.stylus(config.stylus))
+    .pipe($.autoprefixer(config.autoprefixer));
+}
+
+gulp.task('css', function () {
+  return generateMainCSS()
+    .pipe(gulp.dest(paths.public + '/css'))
+    .pipe(browserSync.reload({stream: true}));
+});
+
+var cssPath; //Needed by critical
+gulp.task('css:dist', ['index.html:dist'], function () {
+  cssPath = 'css/main.css';
+  return resolveRef(generateMainCSS(), refSpec.css, 'css/main.css')
+    .pipe($.minifyCss())
+    .pipe(gulp.dest(paths.public));
+});
+
+//--- Bower assets
+
+function makeSymlink(src, dst) {
+  src = path.resolve(src);
+  dst = path.resolve(dst);
+
+  return nodefn.call(fs.rmrf, dst)
+    .catch(function () {})
+    .then(function () {
+      return nodefn.call(fs.symlink, src, dst);
+    });
+}
+
+// When doing a minimal build, just symlink the bower components folder
+gulp.task('bower-components:assets:link', ['mkdirp'], function () {
+  return makeSymlink(paths.client + '/bower_components', paths.public + '/bower_components');
+});
+
+// When doing a full build, extract just the necessary files (currently just fonts)
+// Adapt this to your needs
+gulp.task('bower-components:assets:copy', function () {
+  return gulp.src(mainBowerFiles({
+    filter: '**/*.{eot,svg,ttf,woff}'
+  })).pipe(gulp.dest(paths.public));
+});
+
+//--- Assets
+
+gulp.task('mkdirp', function () {
+  return nodefn.call(fs.mkdirp, paths.public);
+});
+
+function forEachAsset(cb) {
+  var assetsPath = paths.client + '/assets';
+  return nodefn.call(fs.readdir, assetsPath).then(function (files) {
+    return when.all(_.map(files, function (file) {
+      // Ignore dotfiles
+      if (/^\./.test(file)) {
+        return null;
+      }
+      return cb(file);
+    }));
+  });
+}
+
+// When doing a minimal build, just symlink all the assets
+gulp.task('assets:link', ['mkdirp'], function () {
+  return forEachAsset(function (file) {
+    return makeSymlink(paths.client + '/assets/' + file, paths.public + '/' + file);
+  });
+});
+
+// When doing a full build, remove the symlinks and copy them in full
+gulp.task('assets:clean', function () {
+  return forEachAsset(function (file) {
+    return nodefn.call(fs.rmrf, paths.public + '/' + file);
+  });
+});
+
+gulp.task('assets:copy', ['assets:clean'], function () {
+  return gulp.src(paths.client + '/assets/**')
+    .pipe(gulp.dest(paths.public));
+});
+
+//--- Generate index.html
+
+function generateIndexHTML() {
+  return gulp.src(paths.client + '/index.jade')
     .pipe($.jade({
       pretty: true
     }))
-    .pipe(gulp.dest(paths.tmp))
+    .pipe(wiredep());
+}
+
+// Generate index.html for development
+gulp.task('index.html', function () {
+  return generateIndexHTML()
+    .pipe(gulp.dest(paths.public))
     .pipe(browserSync.reload({stream: true}));
 });
 
-// Generate JS functions from Jade templates.
-// Run this before any JS task, because Browserify needs to bundle them in.
-gulp.task('templates', function () {
-  var templates = templatizer(paths.app + '/templates', null, {});
-  return nodefn.call(fs.writeFile, paths.app + '/js/lib/templates.js', templates);
+// Generate index.html for production
+var refSpec = null; //Needed to build the JS and the CSS
+gulp.task('index.html:dist', ['js:dependencies'], function () {
+  return generateIndexHTML()
+    .pipe($.tap(function (file) {
+      var res = useref(file.contents.toString());
+      file.contents = new Buffer(res[0]);
+      refSpec = res[1];
+    }))
+    .pipe($.minifyHtml())
+    .pipe(gulp.dest(paths.public));
 });
 
-// Common outputs between all of the JS tasks.
-var spitJs = function (bundleStream) {
-  return bundleStream
-    .pipe(source(paths.app + '/js/main.js'))
-    .pipe($.rename('main.js'))
-    .pipe(gulp.dest(paths.tmp + '/js/'));
-};
+//--- Resolve useref concatenation
 
-// Bundles Browserify for production; no source or coverage maps.
-gulp.task('js', ['templates'], function () {
-  var bundleStream = browserify(paths.app + '/js/main.js')
-    .bundle();
+function resolveRef(stream, spec, mainFile) {
+  var q = new StreamQueue({ objectMode: true });
 
-  return spitJs(bundleStream);
-});
+  _.each(spec[mainFile].assets, function (file) {
+    if (file === mainFile) {
+      q.queue(stream);
+    } else {
+      q.queue(gulp.src(paths.client + '/' + file));
+    }
+  });
 
-// Bundles Browserify with sourcemaps.
-gulp.task('js:dev', ['templates'], function () {
-  // Incremental development bundle.
-  // Stored as a global variable so it can be reused
-  // between compiles by `browserify-incremental`
-  global.incDevBundle = global.incDevBundle || browserifyIncremental({
-      entries: paths.app + '/js/main.js',
-      debug: true
-    });
 
-  var bundleStream = global.incDevBundle
-    .bundle()
-    .on('error', config.handleError);
 
-  return spitJs(bundleStream)
-    .pipe(browserSync.reload({stream: true}));
-});
+  return q.done()
+    .pipe(vinylBuffer())
+    .pipe($.concat(mainFile));
+}
 
-// Copies over CSS.
-gulp.task('css', function () {
-  return gulp.src(paths.app + '/css/main.styl')
-    .pipe($.stylus())
-    .pipe($.autoprefixer(opts.autoprefixer))
-    .pipe(gulp.dest(paths.tmp + '/css'))
-    .pipe(browserSync.reload({stream: true}));
-});
-
-// Deletes the assets folder or symlink.
-gulp.task('assets:clean', function () {
-  return nodefn.call(exec, 'rm -r "' + paths.tmp + '/assets"').catch(function(){});
-});
-
-// Creates the .tmp folder if it does not already exists.
-gulp.task('mktmp', function () {
-  return nodefn.call(exec, 'mkdir -p "' + paths.tmp + '"');
-});
-
-// Copies over assets.
-gulp.task('assets', ['assets:clean', 'mktmp'], function () {
-  return nodefn.call(fs.symlink, '../app/assets', paths.tmp + '/assets');
-});
-
-gulp.task('fonts', function () {
-  return gulp.src(mainBowerFiles())
-    .pipe($.filter('**/*.{eot,svg,ttf,woff}'))
-    .pipe($.flatten())
-    .pipe(gulp.dest(paths.dist + '/fonts'));
-});
-
-// Copies over assets for production.
-gulp.task('assets:dist', ['fonts'], function () {
-  var imgFilter = $.filter('**/img/**/*.*');
-  return gulp.src(paths.app + '/assets/**/*')
-    .pipe(imgFilter)
-    .pipe($.cache($.imagemin({
-      progressive: true,
-      interlaced: true
-    })))
-    .pipe(imgFilter.restore())
-    .pipe(gulp.dest(paths.dist + '/assets/'));
-});
-
-// Common tasks between all the different builds.
-gulp.task('build:common', ['index.html', 'css']);
+//--- Put together builds
 
 // Minimal development build.
-gulp.task('build', ['build:common', 'js:dev', 'assets']);
+gulp.task('build', ['index.html', 'js', 'css', 'bower-components:assets:link', 'assets:link']);
 
 // CI testing build, with coverage maps.
-gulp.task('build:test', ['build:common', 'assets']);
+gulp.task('build:coverage', ['index.html', 'js:coverage', 'css', 'bower-components:assets:link', 'assets:link']);
 
-var cssPath = '';
+// Production build before critical CSS.
+gulp.task('build:dist:base', ['index.html:dist', 'js:dist', 'css:dist', 'bower-components:assets:copy', 'assets:copy']);
 
-// Production-ready build.
-gulp.task('build:dist:base', ['build:common', 'js', 'assets:dist'], function () {
-  var jsFilter = $.filter('**/*.js');
-  var cssFilter = $.filter('**/*.css');
-  var htmlFilter = $.filter('**/*.html');
-  var assets = $.useref.assets();
-
-  return gulp.src(paths.tmp + '/index.html')
-    .pipe(assets)
-    .pipe($.rev())
-
-    .pipe(jsFilter)
-    .pipe($.uglify())
-    .pipe(jsFilter.restore())
-
-    .pipe(cssFilter)
-    .pipe($.minifyCss())
-    .pipe($.tap(function (file) {
-      // Get the path of the revReplaced CSS file.
-      var tmpPath = path.resolve(paths.tmp);
-      cssPath = file.path.replace(tmpPath, '');
-    }))
-    .pipe(cssFilter.restore())
-
-    .pipe(assets.restore())
-    .pipe($.useref())
-
-    .pipe(htmlFilter)
-    .pipe($.minifyHtml())
-    .pipe(htmlFilter.restore())
-
-    .pipe($.revReplace())
-    .pipe(gulp.dest(paths.dist));
-});
+//---- Critical CSS
 
 var CRIT = '';
 
-gulp.task('critical', ['build:dist:base'], function (done) {
-  // Start a local express server for penthouse.
-  var app = express();
-  var port = 8765;
-
-  app.use(express.static(path.resolve(__dirname, '../dist')));
-
-  app.get('*', function (request, response) {
-    response.sendFile(path.resolve(__dirname, '../dist/index.html'));
-  });
-
-  var server = app.listen(port, function () {
-    penthouse({
-      url: 'http://localhost:' + port,
-      css: paths.dist + cssPath,
-      width: 1440,
-      height: 900
-    }, function (err, criticalCSS) {
-      CRIT = criticalCSS.replace('\n', '');
+gulp.task('critical', ['build:dist:base'], function () {
+  // Start a server for penthouse.
+  return runServer(config.serverProxyPort)
+    .then(function () {
+      return nodefn.call(penthouse, {
+        url: 'http://127.0.0.1:' + config.serverProxyPort,
+        css: paths.public + '/' + cssPath,
+        width: 1440,
+        height: 900
+      });
+    })
+    .then(function(criticalCSS) {
+      CRIT = criticalCSS;
       $.util.log('Critical CSS size: ' + criticalCSS.length + ' bytes.');
-      server.close();
-      done();
+    })
+    .finally(function () {
+      runServer.close();
     });
-  });
 });
 
 gulp.task('build:dist', ['critical'], function () {
-  return gulp.src(paths.dist + '/index.html')
+  return gulp.src(paths.public + '/index.html')
     .pipe($.replace(
       '<link rel=stylesheet href=' + cssPath + '>',
       '<style>' + CRIT + '</style>'
     ))
-    .pipe(gulp.dest(paths.dist));
+    .pipe(gulp.dest(paths.public));
 });

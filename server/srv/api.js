@@ -13,7 +13,7 @@ var Util = require('./util');
 
 var api = express.Router();
 
-var routes = require('../app/js/lib/routes.json');
+var routes = require('../../client/js/lib/routes.json');
 var xml = require('xml-writer');
 
 module.exports = api;

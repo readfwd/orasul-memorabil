@@ -1,12 +1,14 @@
 'use strict';
 
+require('bower-components');
+
 var $ = require('./shims/jquery');
 var _ = require('lodash');
 
 var MainView = require('./views/main');
 var Router = require('./router');
 
-var loadcss = require('./lib/loadcss');
+var loadcss = require('./loadcss');
 
 module.exports = {
   launch: _.once(function () {
@@ -16,7 +18,7 @@ module.exports = {
 
     // Wait for the DOM to be rendered
     $(document).ready(function () {
-      loadcss('/css/main.css');
+      loadcss('css/main.css');
       // loadcss('http://fonts.googleapis.com/css?family=Unica+One|Roboto:400,300,100|Roboto+Slab:400,300');
 
       //Mainview initialization
