@@ -84,6 +84,7 @@
     "templatizer": "^1.1.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.0.0",
+    "watchify": "^2.1.1",
     "when": "^3.6.3",
     "wiredep": "^2.2.0",
     "xml-writer": "^1.6.0"

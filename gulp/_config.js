@@ -25,7 +25,6 @@ config.browserify = {
 // window.$ and window.jQuery. Bootstrap depends on those globals to be
 // defined and won't work without them.
 config.bowerGlobals = {
-  'outlayer': ['Outlayer'],
   'jquery': ['$', 'jQuery'],
 };
 
@@ -34,8 +33,6 @@ config.aliasify = {
   aliases: {
     'bower-components': './lib/bower-components',
     'templates': './lib/templates',
-    'wolfy87-eventemitter': 'eventEmitter',
-    'desandro-get-style-property': 'get-style-property',
   }
 };
 
@@ -65,3 +62,6 @@ config.handleError = function (e) {
   config.plugins.util.log(e.message);
   this.emit('end');
 };
+
+// Inter-task shared space
+config.shared = {};
