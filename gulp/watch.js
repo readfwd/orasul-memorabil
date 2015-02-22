@@ -1,19 +1,18 @@
-'use strict';
-
 var gulp = require('gulp');
 var nodefn = require('when/node');
 
-var config = require('./_config');
+var config = require('./common/config');
 var paths = config.paths;
 
 var browserSync = require('browser-sync');
-var createServer = require('./server');
+var createServer = require('./common/run-server');
 
 // Common watch hooks.
 gulp.task('watch:common', ['build'], function () {
   gulp.watch(paths.client + '/index.jade', ['index.html']);
-  gulp.watch(paths.client + '/**/**/*.styl', ['css']);
+  gulp.watch(paths.client + '/css/**/*.styl', ['css']);
   gulp.watch(paths.client + '/templates/**/*.jade', ['js:dependencies']);
+
   gulp.watch(['bower.json'], ['js:dependencies', 'index.html']);
 
   if (config.shared.incrementalBundle) {

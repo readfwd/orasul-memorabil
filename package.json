@@ -87,6 +87,7 @@
     "watchify": "^2.1.1",
     "when": "^3.6.3",
     "wiredep": "^2.2.0",
-    "xml-writer": "^1.6.0"
+    "xml-writer": "^1.6.0",
+    "gulp-expect-file": "0.0.7"
   }
 }

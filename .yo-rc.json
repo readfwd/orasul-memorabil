@@ -7,6 +7,10 @@
     "packageName": "orasul-memorabil",
     "stagingURL": "http://orasulmemorabil.ro",
     "description": "Proiect cultural de actualitate dedicat orasului Brasov, cea mai mare bază de date de fotografii vechi și noi.",
-    "keywords": "fotografii, poze, Brașov, orașul memorabil, arhitectură, case, panorame, poze vechi, fotografii vechi, foto, proiect cultural"
+    "keywords": "fotografii, poze, Brașov, orașul memorabil, arhitectură, case, panorame, poze vechi, fotografii vechi, foto, proiect cultural",
+    "cssPrecompiler": "stylus",
+    "compilerFeatures": [
+      "templates"
+    ]
   }
 }
